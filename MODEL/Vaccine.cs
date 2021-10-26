@@ -22,7 +22,9 @@ namespace MODEL
 
         public override bool Validate()
         {
-            return ValidateEntry.CheckID(userNo, true) == ErrorStatus.NONE
+            return !string.IsNullOrEmpty(userNo)
+                && DateTimeUtil.IsValidDate(date.ToLongDateString())
+                && ValidateEntry.CheckID(userNo, true) == ErrorStatus.NONE
                 && (DateTime.Today - date).TotalDays >= 0;
 
         }

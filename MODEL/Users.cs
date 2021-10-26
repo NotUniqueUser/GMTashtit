@@ -6,6 +6,7 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Android.Graphics;
+using Android.OS;
 using DAL.FIRESTORE;
 using HELPER;
 
@@ -13,7 +14,7 @@ namespace MODEL
 {
     public class Users : BaseList_FS<User>
     {
-        public async Task<Users> SelectAll()
+        public static async Task<Users> SelectAll()
         {
             Users users = await FireStoreDbTable<User, Users>.SelectAll("Name", Order_By_Direction.ACSCENDING);
 
@@ -26,16 +27,6 @@ namespace MODEL
 
             return users;
         }
-
-        //public async Task SavePictureAsync(string id, Bitmap image)
-        //{
-        //    await FireStoreStorage.SaveToStorage(id, BitMapHelper.BitmapToByteArray(image), "Images/Users");
-        //}
-
-        //public async Task DeletePictureAsync(string id)
-        //{
-        //    await FireStoreStorage.DeleteFromStorage(id, "Images/Users");
-        //}
 
         public async Task<Bitmap> LoadPictureAsync(string id)
         {
@@ -101,6 +92,11 @@ namespace MODEL
                 int compare = item1.Family.CompareTo(item2.Family);
                 return (compare == 0) ? item1.Name.CompareTo(item2.Name) : compare;
             });
+        }
+
+        public static async Task<User> GetUser(string tz)
+        {
+            return await FireStoreDbTable<User, Users>.Select("tz", tz);
         }
     }
 }

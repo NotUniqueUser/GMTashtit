@@ -133,20 +133,33 @@ namespace DAL.FIRESTORE
             try
             {
                 IQuerySnapshot query = await FireStoreDB.Connection
-                                             .GetCollection(typeof(TCollection).Name /*COLLECTION_NAME*/)
-                                             .WhereEqualsTo("Id", id)
-                                             .GetDocumentsAsync();
+                    .Collection(typeof(TCollection).Name /*COLLECTION_NAME*/)
+                    .WhereEqualsTo("Id", id)
+                    .GetAsync();
 
-                if (query.Count >= 1)
-                    return query.ToObjects<TEntity>().ToList()[0];
-                else
-                    return default(TEntity);
+                return query.Count >= 1 ? query.ToObjects<TEntity>().ToList()[0] : default(TEntity);
             }
             catch (Exception e)
             {
                 return default(TEntity);
             }
         }
+        public static async Task<TEntity> Select(string field, string value)
+        {
+            try
+            {
+                IQuerySnapshot query = await FireStoreDB.Connection
+                    .Collection(typeof(TCollection).Name /*COLLECTION_NAME*/)
+                    .WhereEqualsTo(field, value)
+                    .GetAsync();
+
+                return query.Count >= 1 ? query.ToObjects<TEntity>().ToList()[0] : default(TEntity);
+            }
+            catch (Exception e)
+            {
+                return default(TEntity);
+            }
+        }        
 
         public void OnEvent(Java.Lang.Object obj, FirebaseFirestoreException error)
         {
