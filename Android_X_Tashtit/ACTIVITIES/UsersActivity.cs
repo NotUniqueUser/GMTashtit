@@ -41,7 +41,7 @@ namespace Android_X_Tashtit.ACTIVITIES
 
         private async void RefreshUsers()
         {
-            users = await users.SelectAll();
+            users = await Users.SelectAll();
             usersAdapter = new UsersAdapter(rvUsers, users, Resource.Layout.single_user_layout);
             usersAdapter.ItemSelected += EditUser;
             usersAdapter.LongItemSelected += DeleteUser;

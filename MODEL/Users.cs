@@ -17,12 +17,6 @@ namespace MODEL
         public static async Task<Users> SelectAll()
         {
             Users users = await FireStoreDbTable<User, Users>.SelectAll("Name", Order_By_Direction.ACSCENDING);
-
-            
-            // Load pictures
-            //
-            // users.Add(new User() { Family = "Rottenberg", Name = "Uri", Email = "microm2001@hotmail.com", Phone = "1" });
-            // users.Add(new User() { Family = "Rottenberg", Name = "Darina", Email = "rottenberg2020@gmail.com", Phone = "2" });
             users.Sort();
 
             return users;
@@ -81,7 +75,7 @@ namespace MODEL
 
         public override bool Exist(User entity, out User existEntity)
         {
-            existEntity = Find(item => item.Phone.Equals(entity.Phone));
+            existEntity = Find(item => item.Tz.Equals(entity.Tz) && item.Phone.Equals(entity.Phone));
             return existEntity != null;
         }
 
@@ -96,7 +90,7 @@ namespace MODEL
 
         public static async Task<User> GetUser(string tz)
         {
-            return await FireStoreDbTable<User, Users>.Select("tz", tz);
+            return await FireStoreDbTable<User, Users>.Select("Tz", tz);
         }
     }
 }

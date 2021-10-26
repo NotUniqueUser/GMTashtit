@@ -13,7 +13,7 @@ using DAL.FIRESTORE;
 
 namespace MODEL
 {
-    class Vaccines : BaseList_FS<Vaccine>
+    public class Vaccines : BaseList_FS<Vaccine>
     {
         public static async Task<Vaccines> SelectAll()
         {
@@ -30,6 +30,14 @@ namespace MODEL
         {
             base.Sort((Vaccine v1, Vaccine v2) => v1.Date.Ticks.CompareTo(v2.Date.Ticks));
         }
+
+        public static async Task<Vaccines> GetVaccines(User user)
+        {
+            var vaccines =  await FireStoreDbTable<Vaccine, Vaccines>.Query("UserNo", user.Tz);
+            vaccines.Sort();
+            return vaccines;
+        }
+
         public new async Task<bool> Save()
         {
             GenereteUpdateLists();

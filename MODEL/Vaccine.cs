@@ -12,10 +12,20 @@ using HELPER;
 
 namespace MODEL
 {
-    class Vaccine : BaseEntity
+    public class Vaccine : BaseEntity
     {
         private string userNo;
         private DateTime date;
+
+        public Vaccine()
+        {
+        }
+
+        public Vaccine(string userNo, DateTime date)
+        {
+            this.userNo = userNo;
+            this.date = date;
+        }
 
         public string UserNo { get => userNo; set => userNo = value; }
         public DateTime Date { get => date; set => date = value; }

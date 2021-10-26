@@ -89,14 +89,14 @@
             android:layout_height="wrap_content"
             android:text="1"/>
         <TextView
-            android:id="uvTvDate1"
+            android:id="@+id/uvTvDate1"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:textSize="20sp"
             android:layout_height="wrap_content"
             android:text="Date"/>
         <TextView
-            android:id="uvTvWeeks1"
+            android:id="@+id/uvTvWeeks1"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:textSize="20sp"
@@ -117,14 +117,14 @@
             android:layout_height="wrap_content"
             android:text="2"/>
         <TextView
-            android:id="uvTvDate2"
+            android:id="@+id/uvTvDate2"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:textSize="20sp"
             android:layout_height="wrap_content"
             android:text="Date"/>
         <TextView
-            android:id="uvTvWeeks2"
+            android:id="@+id/uvTvWeeks2"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:textSize="20sp"
@@ -144,14 +144,14 @@
             android:layout_height="wrap_content"
             android:text="3"/>
         <TextView
-            android:id="uvTvDate3"
+            android:id="@+id/uvTvDate3"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:textSize="20sp"
             android:layout_height="wrap_content"
             android:text="Date"/>
         <TextView
-            android:id="uvTvWeeks3"
+            android:id="@+id/uvTvWeeks3"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:textSize="20sp"
@@ -160,7 +160,7 @@
         <!--TODO-->
     </LinearLayout>
     <LinearLayout
-        android:layout_marginTop="80sp"
+        android:layout_marginTop="0sp"
         android:layout_width="match_parent"
         android:padding="20sp"
         android:layout_height="match_parent"
@@ -168,11 +168,16 @@
         >
         <com.google.android.material.button.MaterialButton
             android:layout_width="0sp"
+            android:text="Vaccine"
+            android:id="@+id/uvBtnVaccine"
             android:background="#0f32fc"
+            android:layout_marginRight="20sp"
             android:layout_height="match_parent"
             android:layout_weight="2"/>
         <com.google.android.material.button.MaterialButton
             android:layout_width="10sp"
+            android:text="finish"
+            android:id="@+id/uvBtnCancel"
             android:background="#ec332f"
             android:layout_height="match_parent"
             android:layout_weight="1"/>

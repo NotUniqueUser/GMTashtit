@@ -159,7 +159,26 @@ namespace DAL.FIRESTORE
             {
                 return default(TEntity);
             }
-        }        
+        }
+        public static async Task<TCollection> Query(string field, string value)
+        {
+            try
+            {
+                IQuerySnapshot query = await FireStoreDB.Connection
+                    .Collection(typeof(TCollection).Name)
+                    .WhereEqualsTo(field, value)
+                    .GetAsync();
+
+                return query.Count >= 1 ? query.ToObjects<TEntity>().ToList() as TCollection : default(TCollection);
+            
+            }
+            catch(Exception e)
+            {
+                return default(TCollection);
+            }
+        }
+        
+        //public static async Task<>
 
         public void OnEvent(Java.Lang.Object obj, FirebaseFirestoreException error)
         {
