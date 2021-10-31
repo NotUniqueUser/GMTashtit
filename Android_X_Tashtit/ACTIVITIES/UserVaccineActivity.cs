@@ -58,7 +58,7 @@ namespace Android_X_Tashtit.ACTIVITIES
             Vaccine vaccine = new Vaccine(user.Tz, DateTime.Today);
             vaccines.Add(vaccine);
             await vaccines.Save();
-            UvBtnLoadOnClick(null, null);
+            ReloadVaccines();
         }
 
         private void UvBtnFinish_Click(object sender, EventArgs e)
@@ -81,14 +81,7 @@ namespace Android_X_Tashtit.ACTIVITIES
 
                 uvTvName.Text = user.FullName;
 
-                vaccines = await Vaccines.GetVaccines(user);
-                if (vaccines == null && vaccines.Count < 1)
-                    return;
-                for (int i = 0; i < vaccines.Count; i++)
-                {
-                    uvTvDate[i].Text = vaccines[i].Date.ToString("MM/dd/yyyy");
-                    uvTvWeeks[i].Text = ((int)(DateTime.Today - vaccines[i].Date).TotalDays / 7).ToString();
-                }
+                ReloadVaccines();
             }
             catch(Exception ex)
             {
@@ -97,6 +90,19 @@ namespace Android_X_Tashtit.ACTIVITIES
             finally
             {
                 dialog.Dismiss();
+                Keyboard.HideKeyboard(this);
+            }
+        }
+
+        private async void ReloadVaccines()
+        {
+            vaccines = await Vaccines.GetVaccines(user);
+            if (vaccines == null || vaccines.Count < 1)
+                return;
+            for (int i = 0; i < vaccines.Count; i++)
+            {
+                uvTvDate[i].Text = vaccines[i].Date.ToString("MM/dd/yyyy");
+                uvTvWeeks[i].Text = ((int)(DateTime.Today - vaccines[i].Date).TotalDays / 7).ToString();
             }
         }
 

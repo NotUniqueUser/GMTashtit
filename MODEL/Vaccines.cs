@@ -20,10 +20,9 @@ namespace MODEL
             return await FireStoreDbTable<Vaccine, Vaccines>.SelectAll();
         }
 
-        public override bool Exist(Vaccine entity, out Vaccine existEntity)
+        public override bool Exist(Vaccine entity)
         {
-            existEntity = FindAll(item => item.UserNo.Equals(entity.UserNo) && item.UserNo.Equals(entity.Date))[0];
-            return existEntity != null;
+             return FindAll(item => item.UserNo.Equals(entity.UserNo) && item.UserNo.Equals(entity.Date))[0] != null;
         }
 
         public override void Sort()
@@ -34,6 +33,8 @@ namespace MODEL
         public static async Task<Vaccines> GetVaccines(User user)
         {
             var vaccines =  await FireStoreDbTable<Vaccine, Vaccines>.Query("UserNo", user.Tz);
+            if (vaccines == null)
+                return new Vaccines();
             vaccines.Sort();
             return vaccines;
         }

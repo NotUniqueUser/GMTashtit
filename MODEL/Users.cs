@@ -75,7 +75,10 @@ namespace MODEL
 
         public override bool Exist(User entity, out User existEntity)
         {
-            existEntity = Find(item => item.Tz.Equals(entity.Tz) && item.Phone.Equals(entity.Phone));
+            existEntity = null;
+            if (entity.Phone == null || entity.Tz == null)
+                return true;
+            existEntity = Find(item => item.Tz != null && item.Phone != null && item.Tz.Equals(entity.Tz) && item.Phone.Equals(entity.Phone));
             return existEntity != null;
         }
 
