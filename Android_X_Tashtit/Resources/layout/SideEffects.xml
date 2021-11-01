@@ -13,76 +13,70 @@
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
         />
-		
-   <LinearLayout
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-	<TextView
-        android:id="@+id/txtSideEffects"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:text="Side Effects list"
-		android:textColor="#0000ff"
-		android:textSize="30sp"
-		android:textStyle="bold|italic"
-		android:layout_marginTop="20dp"
-		android:gravity="center"
-	/>
 
 	<LinearLayout
-		android:id="@+id/llData"
 		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:orientation="horizontal"
-		android:layout_marginTop="15dp"
-		android:layout_marginLeft="15dp"
-		android:layout_marginRight="15dp"
-		android:visibility="gone"
-	>
+		android:layout_height="match_parent"
+		android:orientation="vertical">
 
-		<EditText
-			android:id="@+id/etSideEffect"
-			android:layout_width="0dp"
+		<TextView
+			android:id="@+id/txtSideEffects"
+			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
-            android:layout_weight="8"
-			android:hint="New side effect"
-		/>
+			android:layout_marginTop="20dp"
+			android:gravity="center"
+			android:text="Side Effects list"
+			android:textColor="#0000ff"
+			android:textSize="30sp"
+			android:textStyle="bold|italic" />
 
-		<ImageButton
-			android:id="@+id/btnOk"
-			android:layout_width="0dp"
-            android:layout_weight="1"
-			android:layout_height="35dp"
-			android:src="@drawable/ok"
-			android:scaleType="centerCrop"
-			android:padding="0dp"
-			android:layout_marginLeft="5dp"
-		/>
+		<LinearLayout
+			android:id="@+id/llData"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="15dp"
+			android:layout_marginTop="15dp"
+			android:layout_marginRight="15dp"
+			android:orientation="horizontal"
+			android:visibility="gone">
 
-		<ImageButton
-			android:id="@+id/btnCancel"
-			android:layout_width="0dp"
-			android:layout_height="35dp"
-            android:layout_weight="1"
-			android:src="@drawable/cancel"
-			android:scaleType="centerCrop"
-			android:padding="0dp"
-			android:layout_marginLeft="5dp"
-	    />
+			<EditText
+				android:id="@+id/etSideEffect"
+				android:layout_width="0dp"
+				android:layout_height="wrap_content"
+				android:layout_weight="8"
+				android:hint="New side effect" />
+
+			<ImageButton
+				android:id="@+id/btnOk"
+				android:layout_width="0dp"
+				android:layout_height="35dp"
+				android:layout_marginLeft="5dp"
+				android:layout_weight="1"
+				android:padding="0dp"
+				android:scaleType="centerCrop"
+				android:src="@drawable/ok" />
+
+			<ImageButton
+				android:id="@+id/btnCancel"
+				android:layout_width="0dp"
+				android:layout_height="35dp"
+				android:layout_marginLeft="5dp"
+				android:layout_weight="1"
+				android:padding="0dp"
+				android:scaleType="centerCrop"
+				android:src="@drawable/cancel" />
+
+		</LinearLayout>
+
+		<androidx.recyclerview.widget.RecyclerView
+			android:id="@+id/lvSideEffects"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:layout_marginLeft="15dp"
+			android:layout_marginTop="15dp"
+			android:layout_marginRight="15dp" />
 
 	</LinearLayout>
-
-	<androidx.recyclerview.widget.RecyclerView
-		android:id="@+id/lvSideEffects"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginLeft="15dp"
-		android:layout_marginRight="15dp"
-	    android:layout_marginTop="15dp"	
-	/>
-
-</LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

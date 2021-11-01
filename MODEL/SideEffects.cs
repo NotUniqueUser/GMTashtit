@@ -4,13 +4,13 @@ using DAL.FIRESTORE;
 
 namespace MODEL
 {
-    public class SideEffects : BaseList<SideEfect>
+    public class SideEffects : BaseList<SideEffect>
     {
         public SideEffects()
         {
         }
 
-        public override bool Exist(SideEfect entity, out SideEfect existEntity)
+        public override bool Exist(SideEffect entity, out SideEffect existEntity)
         {
             existEntity = Find(item => item.Name.Equals(entity.Name));
             return existEntity != null;
@@ -20,9 +20,9 @@ namespace MODEL
         {
             base.Sort((item1, item2) => item1.Name.CompareTo(item2.Name));
         }
-        public async Task<SideEffects> SelectAll()
+        public static async Task<SideEffects> SelectAll()
         {
-            SideEffects sideEffects = await FireStoreDbTable<SideEfect, SideEffects>.SelectAll("Name", Order_By_Direction.ACSCENDING);
+            SideEffects sideEffects = await FireStoreDbTable<SideEffect, SideEffects>.SelectAll("Name", Order_By_Direction.ACSCENDING);
             return sideEffects;
         }
 
@@ -31,18 +31,27 @@ namespace MODEL
             GenereteUpdateLists();
 
             if (InsertList.Count > 0)
-                foreach (SideEfect s in InsertList)
-                    await FireStoreDbTable<SideEfect, SideEffects>.Insert(s);
+                foreach (SideEffect s in InsertList)
+                    await FireStoreDbTable<SideEffect, SideEffects>.Insert(s);
 
             if (UpdateList.Count > 0)
-                foreach (SideEfect s in UpdateList)
-                    await FireStoreDbTable<SideEfect, SideEffects>.Update(s);
+                foreach (SideEffect s in UpdateList)
+                    await FireStoreDbTable<SideEffect, SideEffects>.Update(s);
 
             if (DeleteList.Count > 0)
-                foreach (SideEfect s in DeleteList)
-                    await FireStoreDbTable<SideEfect, SideEffects>.Delete(s);
+                foreach (SideEffect s in DeleteList)
+                    await FireStoreDbTable<SideEffect, SideEffects>.Delete(s);
 
             return base.Save();
         }
+
+        // public override string ToString()
+        // {
+        //     string effects = "";
+        //     this.ForEach(item => effects += item.Name + ";");
+        //     return effects;
+        // }
+        
+        
     }
 }

@@ -29,23 +29,23 @@ namespace Android_X_Tashtit.ACTIVITIES
             private FloatingActionButton fabAdd;
 
             private SideEffects sideEffects;
-            private SideEfect oldSideEffect;
+            private SideEffect oldSideEffect;
             private SideEffectsAdapter adapter;
 
             private int position = -1;
 
             protected override async void OnCreate(Bundle savedInstanceState)
             {
+                base.OnCreate(savedInstanceState);
                 SetContentView(Android_X_Tashtit.Resource.Layout.SideEffects);
 
                 InitializeViews();
 
                 txtHeader.Text = "Side Effects list";
                 etSideEffect.Hint = "New side effect";
-
-                sideEffects = new SideEffects();
+                
                 var progress = Global.SetProgress(this);
-                sideEffects = await sideEffects.SelectAll();
+                sideEffects = await SideEffects.SelectAll();
                 SetupRecyclerView();
                 progress.Dismiss();
 
@@ -77,13 +77,13 @@ namespace Android_X_Tashtit.ACTIVITIES
                 adapter = new SideEffectsAdapter(rvSideEffects, sideEffects, Android_X_Tashtit.Resource.Layout.SingleSideEffects);
                 rvSideEffects.SetAdapter(adapter);
                 rvSideEffects.SetLayoutManager(new LinearLayoutManager(this));
-                rvSideEffects.AddItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.Horizontal));
+                rvSideEffects.AddItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.Vertical));
 
                 adapter.ItemSelected += Adapter_ItemSelected;
                 adapter.LongItemSelected += Adapter_LongItemSelected;
             }
 
-            private void Adapter_LongItemSelected(object sender, SideEfect e)
+            private void Adapter_LongItemSelected(object sender, SideEffect e)
             {
                 position = sideEffects.FindIndex(item => item.Name == e.Name);
                 Global.YesNoAlertDialog(this,
@@ -98,7 +98,7 @@ namespace Android_X_Tashtit.ACTIVITIES
             {
                 if (obj)
                 {
-                    SideEfect sideEffect = sideEffects[position];
+                    SideEffect sideEffect = sideEffects[position];
                     sideEffects.Delete(sideEffect);
                     await sideEffects.Save();
 
@@ -106,7 +106,7 @@ namespace Android_X_Tashtit.ACTIVITIES
                 }
             }
 
-            private void Adapter_ItemSelected(object sender, SideEfect e)
+            private void Adapter_ItemSelected(object sender, SideEffect e)
             {
                 position = sideEffects.FindIndex(item => item.Name == e.Name);
                 oldSideEffect = e;
@@ -141,7 +141,7 @@ namespace Android_X_Tashtit.ACTIVITIES
                 Keyboard.HideKeyboard(this);
 
                 if (etSideEffect.Text == "") return;
-                var sideEffect = new SideEfect(etSideEffect.Text);
+                var sideEffect = new SideEffect(etSideEffect.Text);
 
                 if (sideEffect.Validate())
                 {

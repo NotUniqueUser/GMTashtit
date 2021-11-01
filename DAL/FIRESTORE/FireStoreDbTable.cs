@@ -160,6 +160,7 @@ namespace DAL.FIRESTORE
                 return default(TEntity);
             }
         }
+        
         public static async Task<TCollection> Query(string field, string value)
         {
             try
@@ -169,7 +170,16 @@ namespace DAL.FIRESTORE
                     .WhereEqualsTo(field, value)
                     .GetAsync();
 
-                return query.Count >= 1 ? query.ToObjects<TEntity>().ToList() as TCollection : default(TCollection);
+                var col = new TCollection();
+                if (query.Count > 0)
+                {
+                    col.AddRange(query.ToObjects<TEntity>().ToList());
+                    return col;
+                }
+                else
+                {
+                    return default(TCollection);
+                }
             
             }
             catch(Exception e)

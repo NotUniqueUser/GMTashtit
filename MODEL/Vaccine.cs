@@ -16,19 +16,28 @@ namespace MODEL
     {
         private string userNo;
         private DateTime date;
+        private List<string> vaccineEffects;
 
         public Vaccine()
         {
         }
 
-        public Vaccine(string userNo, DateTime date)
+        public Vaccine(string userNo, DateTime date, List<string> vaccineEffects)
         {
             this.userNo = userNo;
             this.date = date;
+            this.vaccineEffects = vaccineEffects;
         }
 
         public string UserNo { get => userNo; set => userNo = value; }
         public DateTime Date { get => date; set => date = value; }
+
+        public List<string> VaccineEffects
+        {
+            get => vaccineEffects;
+            set => vaccineEffects = value;
+        }
+
 
         public override bool Validate()
         {

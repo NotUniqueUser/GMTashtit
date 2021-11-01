@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 using Android.Views;
 using Android.Widget;
@@ -8,9 +8,9 @@ using System.Collections.Generic;
 
 namespace Android_X_Tashtit.ADAPTERS
 {
-    public class SideEffectsAdapter : BaseRecyclerAdapter<SideEffect>
+    public class SideEffectsVaccineAdapter : BaseRecyclerAdapter<string>
     {
-        public SideEffectsAdapter(RecyclerView recyclerView, List<SideEffect> items, int? layoutId = null)
+        public SideEffectsVaccineAdapter(RecyclerView recyclerView, List<string> items, int? layoutId = null)
             : base(recyclerView, items, layoutId)
         { }
 
@@ -21,9 +21,9 @@ namespace Android_X_Tashtit.ADAPTERS
             viewHolder.AddView(name, "name");
         }
 
-        protected override void OnUpdateView(BaseViewHolder viewHolder, SideEffect item)
+        protected override void OnUpdateView(BaseViewHolder viewHolder, string item)
         {
-            viewHolder.GetView<TextView>("name").Text = item.Name;
+            viewHolder.GetView<TextView>("name").Text = item;
         }
     }
 }

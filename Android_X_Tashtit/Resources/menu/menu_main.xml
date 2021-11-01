@@ -18,7 +18,10 @@
   <item android:id="@+id/mnuCities"
         android:title="Cities"
         />
-
+    <item android:id="@+id/mnuSideEffectVaccine"
+        android:title="Vaccine side effects"/>
+    <item android:id="@+id/mnuSideEffects"
+        android:title="Side Effects"/>
   <item android:id="@+id/mnuVaccineUser"
         android:title="Vaccine user"
         />

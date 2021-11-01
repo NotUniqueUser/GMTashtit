@@ -60,7 +60,7 @@
     <Compile Include="VaccineSideEffects.cs" />
     <Compile Include="Clinic.cs" />
     <Compile Include="Clinics.cs" />
-    <Compile Include="SideEfect.cs" />
+    <Compile Include="SideEffect.cs" />
     <Compile Include="SideEffects.cs" />
     <Compile Include="Users.cs" />
   </ItemGroup>

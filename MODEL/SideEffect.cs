@@ -1,13 +1,13 @@
 ﻿using System;
 namespace MODEL
 {
-    public class SideEfect : BaseEntity
+    public class SideEffect : BaseEntity
     {
         private string name;
-        public SideEfect()
+        public SideEffect()
         {
         }
-        public SideEfect(string name)
+        public SideEffect(string name)
         {
             this.name = name;
         }
@@ -15,7 +15,7 @@ namespace MODEL
 
         public override bool Equals(object obj)
         {
-            return obj is SideEfect efect &&
+            return obj is SideEffect efect &&
                    name == efect.name;
         }
 

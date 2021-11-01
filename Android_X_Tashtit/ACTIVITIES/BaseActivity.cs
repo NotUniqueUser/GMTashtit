@@ -121,6 +121,16 @@ namespace Android_X_Tashtit.ACTIVITIES
         {
             switch (item.ItemId)
             {
+                case Resource.Id.mnuSideEffectVaccine:
+                {
+                    StartActivity(new Intent(this, typeof(ACTIVITIES.SideEffectsVaccineActivity)));
+                    break;
+                }
+                case Resource.Id.mnuSideEffects:
+                {
+                    StartActivity(new Intent(this, typeof(ACTIVITIES.SideEffectsActivity)));
+                    break;
+                }
                 case Resource.Id.mnuVaccineUser:
                     {
                         StartActivity(new Intent(this, typeof(ACTIVITIES.UserVaccineActivity)));

@@ -19,10 +19,12 @@ namespace MODEL
         {
             return await FireStoreDbTable<Vaccine, Vaccines>.SelectAll();
         }
-
-        public override bool Exist(Vaccine entity)
+        public override bool Exist(Vaccine entity, out Vaccine existEntity)
         {
-             return FindAll(item => item.UserNo.Equals(entity.UserNo) && item.UserNo.Equals(entity.Date))[0] != null;
+            existEntity = null;
+            if (entity.UserNo == null) return false;
+            existEntity = Find(item => item.UserNo.Equals(entity.UserNo) && item.Date.Equals(entity.Date));
+            return existEntity != null;
         }
 
         public override void Sort()
@@ -35,6 +37,7 @@ namespace MODEL
             var vaccines =  await FireStoreDbTable<Vaccine, Vaccines>.Query("UserNo", user.Tz);
             if (vaccines == null)
                 return new Vaccines();
+            vaccines.ForEach(item => { item.VaccineEffects ??= new List<string>(); });
             vaccines.Sort();
             return vaccines;
         }
@@ -54,7 +57,7 @@ namespace MODEL
             if (DeleteList.Count > 0)
                 foreach (Vaccine v in DeleteList)
                     await FireStoreDbTable<Vaccine, Vaccines>.Delete(v);
-
+            
             return base.Save();
         }
     }

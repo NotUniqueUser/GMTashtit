@@ -67,6 +67,7 @@
     <Compile Include="ACTIVITIES\ClinicsActivity.cs" />
     <Compile Include="ACTIVITIES\MainActivity.cs" />
     <Compile Include="ACTIVITIES\SideEffectsActivity.cs" />
+    <Compile Include="ACTIVITIES\SideEffectsVaccineActivity.cs" />
     <Compile Include="ACTIVITIES\UsersActivity.cs" />
     <Compile Include="ACTIVITIES\UserVaccineActivity.cs" />
     <Compile Include="ADAPTERS\BaseRecyclerAdapter.cs" />
@@ -74,6 +75,7 @@
     <Compile Include="ADAPTERS\CitiesAdapter.cs" />
     <Compile Include="ADAPTERS\ClinicsAdapter.cs" />
     <Compile Include="ADAPTERS\SideEffectAdapter.cs" />
+    <Compile Include="ADAPTERS\SideEffectVaccineAdapter.cs" />
     <Compile Include="ADAPTERS\UsersAdapter.cs" />
     <Compile Include="BROADCAST\IncomeCallReciever.cs" />
     <Compile Include="NOTIFICATIONS\NotificationHelper.cs" />
@@ -91,6 +93,7 @@
       <SubType>Designer</SubType>
     </AndroidResource>
     <Compile Include="Resources\Resource.designer.cs" />
+    <AndroidResource Include="Resources\layout\vaccine_side_effect.xml" />
     <AndroidResource Include="Resources\values\colors.xml" />
     <AndroidResource Include="Resources\values\ic_launcher_background.xml" />
     <AndroidResource Include="Resources\values\strings.xml" />
