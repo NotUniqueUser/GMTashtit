@@ -161,6 +161,32 @@ namespace DAL.FIRESTORE
             }
         }
         
+        public static async Task<TCollection> QueryById(string idFs)
+        {
+            try
+            {
+                var query = await FireStoreDB.Connection
+                    .Collection(typeof(TCollection).Name)
+                    .WhereEqualsTo(Plugin.CloudFirestore.FieldPath.DocumentId, idFs)
+                    .GetAsync();
+
+                var col = new TCollection();
+                if (query.Count > 0)
+                {
+                    col.AddRange(query.ToObjects<TEntity>().ToList());
+                    return col;
+                }
+                else
+                {
+                    return default(TCollection);
+                }
+            }
+            catch(Exception e)
+            {
+                return default(TCollection);
+            }
+        }
+
         public static async Task<TCollection> Query(string field, string value)
         {
             try

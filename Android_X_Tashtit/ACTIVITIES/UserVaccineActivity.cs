@@ -55,7 +55,7 @@ namespace Android_X_Tashtit.ACTIVITIES
         {
             if (user == null)
                 return;
-            Vaccine vaccine = new Vaccine(user.Tz, DateTime.Today, new List<string>());
+            Vaccine vaccine = new Vaccine(user.Tz, DateTime.Today);
             vaccines.Add(vaccine);
             await vaccines.Save();
             ReloadVaccines();

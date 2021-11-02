@@ -37,7 +37,6 @@ namespace MODEL
             var vaccines =  await FireStoreDbTable<Vaccine, Vaccines>.Query("UserNo", user.Tz);
             if (vaccines == null)
                 return new Vaccines();
-            vaccines.ForEach(item => { item.VaccineEffects ??= new List<string>(); });
             vaccines.Sort();
             return vaccines;
         }

@@ -29,6 +29,7 @@ namespace Android_X_Tashtit.ACTIVITIES
         private SideEffectsVaccineAdapter[] adapter;
         private User user;
         private Vaccines vaccines;
+        private VaccineSideEffects[] sideEffects;
         protected override void InitializeViews()
         {
             etId = FindViewById<EditText>(Resource.Id.etId);
@@ -68,16 +69,16 @@ namespace Android_X_Tashtit.ACTIVITIES
                 items,
                 async(o, args) =>
                 {
-                    if (!vaccines[pos].VaccineEffects.Exists(items => items.Equals(effects[args.Which].Name)))
-                    {
-                        var temp = new Vaccine(vaccines[pos].UserNo, vaccines[pos].Date, new List<string>(vaccines[pos].VaccineEffects));
-                        temp.IdFs = vaccines[pos].IdFs;
-                        vaccines[pos].VaccineEffects.Add(effects[args.Which].Name);
-                        vaccines.Modify(temp, vaccines[pos]);
-                        await vaccines.Save();
-                        Load();
-                    }
+                    VaccineSideEffect se = new VaccineSideEffect(effects[args.Which].IdFs, vaccines[pos].IdFs, effects[args.Which].Name);
+                    sideEffects[pos].Add(se);
+                    await sideEffects[pos].Save();
+                    Load();
                 });
+            b.SetNegativeButton("Cancel", (o, args) =>
+            {
+                b.Dispose();
+            });
+            b.SetCancelable(false);
             b.Show();
         }
 
@@ -99,6 +100,11 @@ namespace Android_X_Tashtit.ACTIVITIES
                 // TODO
                 return;
             }
+            sideEffects = new VaccineSideEffects[vaccines.Count];
+            for (int i = 0; i < vaccines.Count; i++)
+            {
+                sideEffects[i] = await VaccineSideEffects.GetVaccineSideEffects(vaccines[i].IdFs);
+            }
             Load();
         }
 
@@ -114,7 +120,7 @@ namespace Android_X_Tashtit.ACTIVITIES
                 llAdd[i].Visibility = ViewStates.Visible;
                 rvVaccine[i].Visibility = ViewStates.Visible;
                 tvAddDate[i].Text = vaccines[i].Date.ToString("d/M");
-                adapter[i] = new SideEffectsVaccineAdapter(rvVaccine[i], vaccines[i].VaccineEffects,
+                adapter[i] = new SideEffectsVaccineAdapter(rvVaccine[i], sideEffects[i],
                     Resource.Layout.SingleSideEffects);
                 rvVaccine[i].SetAdapter(adapter[i]);
             }

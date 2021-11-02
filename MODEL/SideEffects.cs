@@ -26,6 +26,12 @@ namespace MODEL
             return sideEffects;
         }
 
+        public static async Task<SideEffects> SelectById(string idFs)
+        {
+            SideEffects sideEffects = await FireStoreDbTable<SideEffect, SideEffects>.QueryById(idFs);
+            return sideEffects ?? new SideEffects();
+        }
+
         public async Task<bool> Save()
         {
             GenereteUpdateLists();

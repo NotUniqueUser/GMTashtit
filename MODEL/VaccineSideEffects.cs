@@ -10,10 +10,15 @@ namespace MODEL
         {
         }
 
-        public async Task<VaccineSideEffects> SelectAll()
+        public static async Task<VaccineSideEffects> SelectAll()
         {
             VaccineSideEffects vaccineSideEffects = await FireStoreDbTable<VaccineSideEffect, VaccineSideEffects>.SelectAll("vaccineNo", Order_By_Direction.ACSCENDING);
             return vaccineSideEffects;
+        }
+        public static async Task<VaccineSideEffects> GetVaccineSideEffects(string id)
+        {
+            VaccineSideEffects vaccineSideEffects = await FireStoreDbTable<VaccineSideEffect, VaccineSideEffects>.Query("VaccineNo", id);
+            return vaccineSideEffects ?? new VaccineSideEffects();
         }
         public override bool Exist(VaccineSideEffect entity, out VaccineSideEffect existEntity)
         {
