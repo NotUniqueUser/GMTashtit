@@ -89,7 +89,7 @@ namespace Android_X_Tashtit.ACTIVITIES
             user = await Users.GetUser(etId.Text);
             if (user == null)
             {
-                // TODO
+                Toast.MakeText(this, "User not found", ToastLength.Long).Show();
                 return;
             }
 
@@ -97,7 +97,7 @@ namespace Android_X_Tashtit.ACTIVITIES
             vaccines = await Vaccines.GetVaccines(user);
             if (vaccines.Count <= 0)
             {
-                // TODO
+                Toast.MakeText(this, "user has no vaccines", ToastLength.Long).Show();
                 return;
             }
             sideEffects = new VaccineSideEffects[vaccines.Count];
@@ -122,7 +122,9 @@ namespace Android_X_Tashtit.ACTIVITIES
                 tvAddDate[i].Text = vaccines[i].Date.ToString("d/M");
                 adapter[i] = new SideEffectsVaccineAdapter(rvVaccine[i], sideEffects[i],
                     Resource.Layout.SingleSideEffects);
-                rvVaccine[i].SetAdapter(adapter[i]);
+                rvVaccine[i].SetLayoutManager(new LinearLayoutManager(this));
+                rvVaccine[i].AddItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.Vertical));
+                adapter[i].NotifyDataSetChanged();
             }
         }
         protected override void OnCreate(Bundle savedInstanceState)
