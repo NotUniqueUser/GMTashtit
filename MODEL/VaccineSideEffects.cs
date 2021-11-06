@@ -1,54 +1,52 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DAL.FIRESTORE;
 
 namespace MODEL
 {
-    public class VaccineSideEffects : BaseList<VaccineSideEffect>
+    public class VaccineSideEffects : BaseList_FS<VaccineSideEffect>
     {
-        public VaccineSideEffects()
-        {
-        }
-
         public static async Task<VaccineSideEffects> SelectAll()
         {
-            VaccineSideEffects vaccineSideEffects = await FireStoreDbTable<VaccineSideEffect, VaccineSideEffects>.SelectAll("vaccineNo", Order_By_Direction.ACSCENDING);
+            var vaccineSideEffects =
+                await FireStoreDbTable<VaccineSideEffect, VaccineSideEffects>.SelectAll("vaccineNo");
             return vaccineSideEffects;
         }
+
         public static async Task<VaccineSideEffects> GetVaccineSideEffects(string id)
         {
-            VaccineSideEffects vaccineSideEffects = await FireStoreDbTable<VaccineSideEffect, VaccineSideEffects>.Query("VaccineNo", id);
+            var vaccineSideEffects =
+                await FireStoreDbTable<VaccineSideEffect, VaccineSideEffects>.Query("VaccineNo", id);
             return vaccineSideEffects ?? new VaccineSideEffects();
         }
+
         public override bool Exist(VaccineSideEffect entity, out VaccineSideEffect existEntity)
         {
             existEntity = Find(item => item.SideEfectNo.Equals(entity.SideEfectNo));
             return existEntity != null;
         }
 
-        protected override void Sort()
+        public override void Sort()
         {
-            base.Sort((item1, item2) => item1.VaccineNo.CompareTo(item2.VaccineNo));
+            base.Sort((item1, item2) => item1.Remarks.CompareTo(item2.Remarks));
         }
-        public async Task<bool> Save()
+
+        public new async Task<bool> Save()
         {
             GenereteUpdateLists();
 
             if (InsertList.Count > 0)
-                foreach (VaccineSideEffect v in InsertList)
+                foreach (var v in InsertList)
                     await FireStoreDbTable<VaccineSideEffect, VaccineSideEffects>.Insert(v);
 
             if (UpdateList.Count > 0)
-                foreach (VaccineSideEffect v in UpdateList)
+                foreach (var v in UpdateList)
                     await FireStoreDbTable<VaccineSideEffect, VaccineSideEffects>.Update(v);
 
             if (DeleteList.Count > 0)
-                foreach (VaccineSideEffect v in DeleteList)
+                foreach (var v in DeleteList)
                     await FireStoreDbTable<VaccineSideEffect, VaccineSideEffects>.Delete(v);
 
             return base.Save();
         }
-
     }
 }
-

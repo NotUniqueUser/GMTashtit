@@ -1,22 +1,14 @@
 ﻿using Android.App;
 using Android.Content;
-using Android.OS;
-using Android.Runtime;
 using Android.Telephony;
-using Android.Views;
-using Android.Widget;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Android_X_Tashtit.BROADCAST
 {
-    [BroadcastReceiver()]
-    [IntentFilter(new[] { TelephonyManager.ActionPhoneStateChanged })]
+    [BroadcastReceiver]
+    [IntentFilter(new[] {TelephonyManager.ActionPhoneStateChanged})]
     public class IncomeCallReciever : BroadcastReceiver
     {
-        private static bool messageSent = false;
+        private static bool messageSent;
 
         public override void OnReceive(Context context, Intent intent)
         {
@@ -26,7 +18,7 @@ namespace Android_X_Tashtit.BROADCAST
             if (intent.Extras != null)
             {
                 // קריאת מצב השיחה
-                string state = intent.GetStringExtra(TelephonyManager.ExtraState);
+                var state = intent.GetStringExtra(TelephonyManager.ExtraState);
 
                 if (state == TelephonyManager.ExtraStateOffhook)
                     messageSent = true;
@@ -35,7 +27,7 @@ namespace Android_X_Tashtit.BROADCAST
                 if (state == TelephonyManager.ExtraStateIdle)
                 {
                     // קריאת מס' הטלפון המתקשר
-                    string telephone = intent.GetStringExtra(TelephonyManager.ExtraIncomingNumber);
+                    var telephone = intent.GetStringExtra(TelephonyManager.ExtraIncomingNumber);
 
                     if (string.IsNullOrEmpty(telephone))
                         telephone = string.Empty;
@@ -44,12 +36,12 @@ namespace Android_X_Tashtit.BROADCAST
 
                     if (!string.IsNullOrEmpty(telephone) && !messageSent)
                     {
-                        SmsManager.Default.SendTextMessage(telephone, null, "Sorry, I'm bussy now.\nI'll call you later.", null, null);
+                        SmsManager.Default.SendTextMessage(telephone, null,
+                            "Sorry, I'm bussy now.\nI'll call you later.", null, null);
                         messageSent = true;
                     }
                 }
             }
         }
     }
-
 }

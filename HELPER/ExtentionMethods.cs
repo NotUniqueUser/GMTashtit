@@ -1,13 +1,4 @@
-﻿using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 
 namespace HELPER
 {
@@ -15,7 +6,7 @@ namespace HELPER
     {
         public static byte[] ToByteArray(this string str)
         {
-            return System.Text.Encoding.ASCII.GetBytes(str);
+            return Encoding.ASCII.GetBytes(str);
         }
     }
 }

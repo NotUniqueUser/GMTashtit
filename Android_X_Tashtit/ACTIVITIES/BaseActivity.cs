@@ -1,30 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
-using Android.Bluetooth;
+﻿using Android.App;
 using Android.Content;
 using Android.OS;
-using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-using AndroidX.AppCompat.App;
-
-using MODEL;
-using HELPER;
 using Android_X_Tashtit.SERVICES;
-
+using AndroidX.AppCompat.App;
+using AlertDialog = Android.App.AlertDialog;
 
 namespace Android_X_Tashtit.ACTIVITIES
 {
     [Activity(Label = "BaseActivity")]
     public abstract class BaseActivity : AppCompatActivity /*, IInitialization*/
     {
-        protected abstract void InitializeViews();
-
-        public static ISharedPreferences       sharedPreferences;
+        public static ISharedPreferences sharedPreferences;
         public static ISharedPreferencesEditor editor;
 
         public static string PACKAGE_NAME;
@@ -33,13 +21,14 @@ namespace Android_X_Tashtit.ACTIVITIES
         //public static Customer CurrentCustomer;
 
         private static TextView txtCartItemCount;
+        protected abstract void InitializeViews();
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
 
             sharedPreferences = GetSharedPreferences("login", FileCreationMode.Private);
-            editor            = sharedPreferences.Edit();
+            editor = sharedPreferences.Edit();
 
             PACKAGE_NAME = ApplicationInfo.PackageName;
         }
@@ -54,14 +43,15 @@ namespace Android_X_Tashtit.ACTIVITIES
             ShowHideMenu(menu, false);
         }
 
-        private void ShowHideMenu (IMenu menu, bool show)
+        private void ShowHideMenu(IMenu menu, bool show)
         {
-            int[] menuItems = new int[] { 
-                                          Resource.Id.mnuCities
-                                        };
+            int[] menuItems =
+            {
+                Resource.Id.mnuCities
+            };
 
-            foreach (int menuItem in menuItems)
-                menu.FindItem(menuItem).SetVisible((show) ? true : false);
+            foreach (var menuItem in menuItems)
+                menu.FindItem(menuItem).SetVisible(show ? true : false);
         }
 
         public override bool OnCreateOptionsMenu(IMenu menu)
@@ -101,18 +91,13 @@ namespace Android_X_Tashtit.ACTIVITIES
             {
                 if (itemCount == 0)
                 {
-                    if (txtCartItemCount.Visibility != ViewStates.Gone)
-                    {
-                        txtCartItemCount.Visibility = ViewStates.Gone;
-                    }
+                    if (txtCartItemCount.Visibility != ViewStates.Gone) txtCartItemCount.Visibility = ViewStates.Gone;
                 }
                 else
                 {
                     txtCartItemCount.Text = itemCount.ToString();
                     if (txtCartItemCount.Visibility != ViewStates.Visible)
-                    {
                         txtCartItemCount.Visibility = ViewStates.Visible;
-                    }
                 }
             }
         }
@@ -123,60 +108,60 @@ namespace Android_X_Tashtit.ACTIVITIES
             {
                 case Resource.Id.mnuSideEffectVaccine:
                 {
-                    StartActivity(new Intent(this, typeof(ACTIVITIES.SideEffectsVaccineActivity)));
+                    StartActivity(new Intent(this, typeof(SideEffectsVaccineActivity)));
                     break;
                 }
                 case Resource.Id.mnuSideEffects:
                 {
-                    StartActivity(new Intent(this, typeof(ACTIVITIES.SideEffectsActivity)));
+                    StartActivity(new Intent(this, typeof(SideEffectsActivity)));
                     break;
                 }
                 case Resource.Id.mnuVaccineUser:
-                    {
-                        StartActivity(new Intent(this, typeof(ACTIVITIES.UserVaccineActivity)));
-                        break;
-                    }
+                {
+                    StartActivity(new Intent(this, typeof(UserVaccineActivity)));
+                    break;
+                }
                 case Resource.Id.mnuUsers:
-                    {
-                        StartActivity(new Intent(this, typeof(ACTIVITIES.UsersActivity)));
-                        break;
-                    }
+                {
+                    StartActivity(new Intent(this, typeof(UsersActivity)));
+                    break;
+                }
                 case Resource.Id.mnuClinics:
-                    {
-                        StartActivity(new Intent(this, typeof(ACTIVITIES.ClinicsActivity)));
-                        break;
-                    }
+                {
+                    StartActivity(new Intent(this, typeof(ClinicsActivity)));
+                    break;
+                }
                 case Resource.Id.mnuCities:
-                    {
-                        StartActivity(new Intent(this, typeof(ACTIVITIES.CitiesActivity)));
-                        break;
-                    }
+                {
+                    StartActivity(new Intent(this, typeof(CitiesActivity)));
+                    break;
+                }
 
                 case Resource.Id.mnuLogout:
-                    {
-                        Logout();
-                        break;
-                    }
+                {
+                    Logout();
+                    break;
+                }
 
                 case Resource.Id.mnuMusicPlay:
-                    {
-                        Intent intent = new Intent(this, typeof(MediaService));
-                        StartService(intent);
-                        break;
-                    }
+                {
+                    var intent = new Intent(this, typeof(MediaService));
+                    StartService(intent);
+                    break;
+                }
 
                 case Resource.Id.mnuMusicStop:
-                    {
-                        Intent intent = new Intent(this, typeof(MediaService));
-                        StopService(intent);
-                        break;
-                    }
+                {
+                    var intent = new Intent(this, typeof(MediaService));
+                    StopService(intent);
+                    break;
+                }
 
                 case Resource.Id.mnuExit:
-                    {
-                        Android.OS.Process.KillProcess(Android.OS.Process.MyPid());
-                        break;
-                    }
+                {
+                    Process.KillProcess(Process.MyPid());
+                    break;
+                }
             }
 
             return base.OnOptionsItemSelected(item);
@@ -184,7 +169,7 @@ namespace Android_X_Tashtit.ACTIVITIES
 
         private void Logout()
         {
-            Android.App.AlertDialog.Builder alertDiag = new Android.App.AlertDialog.Builder(this);
+            var alertDiag = new AlertDialog.Builder(this);
 
             alertDiag.SetTitle("Logout");
             alertDiag.SetMessage("Logout and Exit (optional)");
@@ -192,7 +177,8 @@ namespace Android_X_Tashtit.ACTIVITIES
             alertDiag.SetCancelable(true);
 
             alertDiag.SetPositiveButton("Logout", (senderAlert, args)
-            => {
+                =>
+            {
                 editor.PutString("EMAIL", "");
                 editor.PutString("PASSWORD", "");
                 editor.Commit();
@@ -203,7 +189,8 @@ namespace Android_X_Tashtit.ACTIVITIES
             });
 
             alertDiag.SetNeutralButton("Lgout & Exit", (senderAlert, args)
-            => {
+                =>
+            {
                 editor.PutString("EMAIL", "");
                 editor.PutString("PASSWORD", "");
                 editor.Commit();
@@ -212,11 +199,12 @@ namespace Android_X_Tashtit.ACTIVITIES
 
                 InvalidateOptionsMenu();
 
-                Android.OS.Process.KillProcess(Android.OS.Process.MyPid());
+                Process.KillProcess(Process.MyPid());
             });
 
             alertDiag.SetNegativeButton("Cancel", (senderAlert, args)
-            => {
+                =>
+            {
                 alertDiag.Dispose();
             });
 

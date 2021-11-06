@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Linq;
-using System.Text;
-using System.Data;
-using System.Runtime.Serialization;
+using System.Reflection;
 
 //using HELPER;
 
 namespace MODEL
 {
     /// <summary>
-    /// הגדרת פעולות העריכה
+    ///     הגדרת פעולות העריכה
     /// </summary>
     //[DataContract]
     [Flags]
@@ -19,16 +16,19 @@ namespace MODEL
     {
         //[EnumMember]
         Add,
+
         //[EnumMember]
         Modify,
+
         //[EnumMember]
         Delete,
+
         //[EnumMember]
         NONE
-    };
+    }
 
     /// <summary>
-    /// הגדרת רשימת איברים עפ"י טיפוס מסויים
+    ///     הגדרת רשימת איברים עפ"י טיפוס מסויים
     /// </summary>
     /// <typeparam name="T">טיפוס הנתונים</typeparam>
     //[CollectionDataContract]
@@ -36,8 +36,8 @@ namespace MODEL
     {
         #region DATA MEMBERS
 
-        protected bool    sortList;             // האם למיין את הרשימה
-        protected string  keyField = "Id";     //         שם שדה המפתח
+        protected bool sortList; // האם למיין את הרשימה
+        protected string keyField = "Id"; //         שם שדה המפתח
 
         #endregion DATA MEMBERS
 
@@ -59,12 +59,19 @@ namespace MODEL
         #region PROPERTIES
 
         /// <summary>
-        /// <== רשימת האיברים שלא נמחקו
-        /// EntityStatus = Deleted-כל האיברים פרט לאלה ש
+        ///     <== רשימת האיברים שלא נמחקו
+        ///     EntityStatus = Deleted-כל האיברים פרט לאלה ש
         /// </summary>
         public List<T> UndeletedList
         {
-            get { return (this == null) ? null : this.Where(item => (EntityStatus)item.GetType().GetProperty("EntityStatus").GetValue(item, null) != EntityStatus.DELETED).ToList(); }
+            get
+            {
+                return this == null
+                    ? null
+                    : this.Where(item =>
+                        (EntityStatus) item.GetType().GetProperty("EntityStatus").GetValue(item, null) !=
+                        EntityStatus.DELETED).ToList();
+            }
         }
 
         public List<T> InsertList { get; set; }
@@ -76,7 +83,7 @@ namespace MODEL
         #region METHODS
 
         /// <summary>
-        /// הוספת איבר לרשימה
+        ///     הוספת איבר לרשימה
         /// </summary>
         /// <param name="entity">האיבר להוספה</param>
         /// <returns>האם נוסף בהצלחה</returns>
@@ -93,13 +100,13 @@ namespace MODEL
                 if (sortList) Sort();
                 return true;
             }
-            else
-                return false;
+
+            return false;
         }
 
         /// <summary>
-        /// שינוי איבר ברשימה
-        /// מחליף איבר חדש באיבר הקיים ברשימה
+        ///     שינוי איבר ברשימה
+        ///     מחליף איבר חדש באיבר הקיים ברשימה
         /// </summary>
         /// <param name="oldEntity">האיבר הקיים ברשימה</param>
         /// <param name="newEntity">האיבר החדש</param>
@@ -107,30 +114,30 @@ namespace MODEL
         public bool Modify(T oldEntity, T newEntity)
         {
             bool entityExists;
-            int  id;
-            T    existEntity;
+            int id;
+            T existEntity;
             EntityStatus status;
 
-            id = (int)oldEntity.GetType().GetProperty("Id").GetValue(oldEntity, null);
+            id = (int) oldEntity.GetType().GetProperty("Id").GetValue(oldEntity, null);
             newEntity.GetType().GetProperty("Id").SetValue(newEntity, id, null);
 
             if (!oldEntity.Equals(newEntity))
             {
-                status = (EntityStatus)oldEntity.GetType().GetProperty("EntityStatus").GetValue(oldEntity, null);
+                status = (EntityStatus) oldEntity.GetType().GetProperty("EntityStatus").GetValue(oldEntity, null);
 
                 entityExists = Exist(newEntity, out existEntity);
 
                 if (!entityExists ||
-                    entityExists && id == (int)existEntity.GetType().GetProperty("Id").GetValue(existEntity, null))
+                    entityExists && id == (int) existEntity.GetType().GetProperty("Id").GetValue(existEntity, null))
                 {
-                    oldEntity = Find(oldEntity);  // This row needed for WEB or WEB_SERVICE Projects
+                    oldEntity = Find(oldEntity); // This row needed for WEB or WEB_SERVICE Projects
                     return Change(oldEntity, newEntity, status);
                 }
-                else
-                    return false;
-            }
-            else
+
                 return false;
+            }
+
+            return false;
         }
 
         private bool Change(T oldEntity, T newEntity, EntityStatus status)
@@ -154,12 +161,12 @@ namespace MODEL
 
             SetObjects(oldEntity);
 
-            if (sortList) Sort();            // מיון הרשימה מחדש
+            if (sortList) Sort(); // מיון הרשימה מחדש
             return true;
         }
 
         /// <summary>
-        /// מחיקת איבר מהרשימה
+        ///     מחיקת איבר מהרשימה
         /// </summary>
         /// <param name="entity">האיבר למחיקה</param>
         public void Delete(T entity)
@@ -167,24 +174,26 @@ namespace MODEL
             //                                         אם שדה המפתח מכיל ערך <> 0
             // הרשומה קיימת במסד הנתונים ויש לסמן אותה ברשימה כמועמדת למחיקה
             //                                    אחרת יש להסיר את האיבר מהרשימה
-            if ((int)entity.GetType().GetProperty(keyField).GetValue(entity, null) != 0)
+            if ((int) entity.GetType().GetProperty(keyField).GetValue(entity, null) != 0)
             {
-                T e = Find(keyField, (int)entity.GetType().GetProperty(keyField).GetValue(entity, null));
+                var e = Find(keyField, (int) entity.GetType().GetProperty(keyField).GetValue(entity, null));
                 e.GetType().GetProperty("EntityStatus").SetValue(e, EntityStatus.DELETED, null);
             }
             else
+            {
                 Remove(entity);
+            }
         }
 
         /// <summary>
-        /// חפש ישות עפ"י מאפיין
+        ///     חפש ישות עפ"י מאפיין
         /// </summary>
         /// <param name="property">המאפיין לחיפוש</param>
         /// <param name="value">הערך לחיפוש</param>
         /// <returns>הישות שנמצאה</returns>
         public T Find(string property, int value)
         {
-            T t = new T();
+            var t = new T();
 
             if (Count > 0)
                 t = base.Find(item => Convert.ToInt32(t.GetType().GetProperty(property).GetValue(item, null)) == value);
@@ -194,38 +203,39 @@ namespace MODEL
 
         public T Find(string property, string value)
         {
-            T t = new T();
+            var t = new T();
 
             if (Count > 0)
-                t = base.Find(item => t.GetType().GetProperty(property).GetValue(item, null).ToString().Trim() == value.Trim());
+                t = base.Find(item =>
+                    t.GetType().GetProperty(property).GetValue(item, null).ToString().Trim() == value.Trim());
 
             return t;
         }
 
         public T Find(string property, EntityStatus value)
         {
-            T t = new T();
+            var t = new T();
 
             if (Count > 0)
-                t = base.Find(item => (EntityStatus)t.GetType().GetProperty(property).GetValue(item, null) == value);
+                t = base.Find(item => (EntityStatus) t.GetType().GetProperty(property).GetValue(item, null) == value);
 
             return t;
         }
 
         public T Find(T entity)
         {
-            T t = new T();
+            var t = new T();
 
             if (Count > 0)
                 t = base.Find(item => item.Equals(entity));
             else
-                t = default(T);
+                t = default;
 
             return t;
         }
 
         /// <summary>
-        /// קביעת נתונים לאיבר החדש
+        ///     קביעת נתונים לאיבר החדש
         /// </summary>
         /// <param name="oldEntity">האיבר הישן</param>
         /// <param name="newEntity">האיבר החדש</param>
@@ -242,24 +252,31 @@ namespace MODEL
                         pi.SetValue(oldEntity, newEntity.GetType().GetProperty(pi.Name).GetValue(newEntity, null), null);
                 */
 
-                Type type = oldEntity.GetType();
+                var type = oldEntity.GetType();
                 //FieldInfo[] fieldInfo = type.GetFields(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
 
                 // שליפת כל השדות כולל שדות של מחלקת הבסיס
-                FieldInfo[] fieldInfo = GetFieldInfosIncludingBaseClasses(type, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+                var fieldInfo = GetFieldInfosIncludingBaseClasses(type,
+                    BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
 
-                foreach (FieldInfo pi in fieldInfo)
+                foreach (var pi in fieldInfo)
                     try
                     {
                         // טיפול בשדות של המחלקה הנוכחית
                         if (pi.Name.ToUpper() != keyField.ToUpper())
-                            pi.SetValue(oldEntity, newEntity.GetType().GetField(pi.Name, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy).GetValue(newEntity));
+                            pi.SetValue(oldEntity,
+                                newEntity.GetType().GetField(pi.Name,
+                                        BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy)
+                                    .GetValue(newEntity));
                     }
                     catch (Exception e)
                     {
                         // BaseType - טיפול בשדות של מחלקת האב
                         if (pi.Name.ToUpper() != keyField.ToUpper())
-                            pi.SetValue(oldEntity, newEntity.GetType().BaseType.GetField(pi.Name, BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy).GetValue(newEntity));
+                            pi.SetValue(oldEntity,
+                                newEntity.GetType().BaseType.GetField(pi.Name,
+                                        BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy)
+                                    .GetValue(newEntity));
                     }
             }
         }
@@ -269,27 +286,25 @@ namespace MODEL
         //////
         public static FieldInfo[] GetFieldInfosIncludingBaseClasses(Type type, BindingFlags bindingFlags)
         {
-            FieldInfo[] fieldInfos = type.GetFields(bindingFlags);
+            var fieldInfos = type.GetFields(bindingFlags);
 
             // If this class doesn't have a base, don't waste any time
-            if (type.BaseType == typeof(BaseEntity /*object*/))
+            if (type.BaseType == typeof(BaseEntity /*object*/)) return fieldInfos;
+
+            // Otherwise, collect all types up to the furthest base class
+            var currentType = type;
+            var fieldComparer = new FieldInfoComparer();
+            var fieldInfoList = new HashSet<FieldInfo>(fieldInfos, fieldComparer);
+            while (currentType != typeof(BaseEntity /*object*/))
             {
-                return fieldInfos;
+                fieldInfos = currentType.GetFields(bindingFlags);
+                fieldInfoList.UnionWith(fieldInfos);
+                currentType = currentType.BaseType;
             }
-            else
-            {   // Otherwise, collect all types up to the furthest base class
-                var currentType = type;
-                var fieldComparer = new FieldInfoComparer();
-                var fieldInfoList = new HashSet<FieldInfo>(fieldInfos, fieldComparer);
-                while (currentType != typeof(BaseEntity /*object*/))
-                {
-                    fieldInfos = currentType.GetFields(bindingFlags);
-                    fieldInfoList.UnionWith(fieldInfos);
-                    currentType = currentType.BaseType;
-                }
-                return fieldInfoList.ToArray();
-            }
+
+            return fieldInfoList.ToArray();
         }
+
         private class FieldInfoComparer : IEqualityComparer<FieldInfo>
         {
             public bool Equals(FieldInfo x, FieldInfo y)
@@ -316,44 +331,54 @@ namespace MODEL
         #region ABSTRACT / VIRTUAL METHODS
 
         /// <summary>
-        /// שמירת הנתונים
-        ///                                   מטודה זו נקראת לאחר ביצוע המטודה במחלקה היורשת
-        ///      (הפעולות: 1. מחיקה מהרשימה של כל האיברים שנמחקו (לאחר המחיקה ממסד הנתונים
-        /// (לאחר הוספה/עדכון במסד הנתונים) Unchanged-סימון כל האיברים ברשימה כ 
+        ///     שמירת הנתונים
+        ///     מטודה זו נקראת לאחר ביצוע המטודה במחלקה היורשת
+        ///     (הפעולות: 1. מחיקה מהרשימה של כל האיברים שנמחקו (לאחר המחיקה ממסד הנתונים
+        ///     (לאחר הוספה/עדכון במסד הנתונים) Unchanged-סימון כל האיברים ברשימה כ
         /// </summary>
         public virtual bool Save()
-        {   
-            RemoveAll(item => (EntityStatus)item.GetType().GetProperty("EntityStatus").GetValue(item, null) == EntityStatus.DELETED);
-            ForEach  (item => item.GetType().GetProperty("EntityStatus").SetValue(item, EntityStatus.UNCHANGED, null));
+        {
+            RemoveAll(item => (EntityStatus) item.GetType().GetProperty("EntityStatus").GetValue(item, null) ==
+                              EntityStatus.DELETED);
+            ForEach(item => item.GetType().GetProperty("EntityStatus").SetValue(item, EntityStatus.UNCHANGED, null));
 
             return isUpdateOK;
         }
 
         protected bool isUpdateOK;
-        
+
         /// <summary>
-        /// Genereta InsertList, UpdateList, DeleteList
+        ///     Genereta InsertList, UpdateList, DeleteList
         /// </summary>
         protected void GenereteUpdateLists()
         {
-            InsertList = this.Where(item => (EntityStatus)item.GetType().GetProperty("EntityStatus").GetValue(item, null) == EntityStatus.ADDED).ToList();
-            UpdateList = this.Where(item => (EntityStatus)item.GetType().GetProperty("EntityStatus").GetValue(item, null) == EntityStatus.MODIFIED).ToList();
-            DeleteList = this.Where(item => (EntityStatus)item.GetType().GetProperty("EntityStatus").GetValue(item, null) == EntityStatus.DELETED).ToList();
+            InsertList = this.Where(item =>
+                    (EntityStatus) item.GetType().GetProperty("EntityStatus").GetValue(item, null) ==
+                    EntityStatus.ADDED)
+                .ToList();
+            UpdateList = this.Where(item =>
+                    (EntityStatus) item.GetType().GetProperty("EntityStatus").GetValue(item, null) ==
+                    EntityStatus.MODIFIED)
+                .ToList();
+            DeleteList = this.Where(item =>
+                    (EntityStatus) item.GetType().GetProperty("EntityStatus").GetValue(item, null) ==
+                    EntityStatus.DELETED)
+                .ToList();
         }
 
         /// <summary>
-        /// בדיקה אם איבר נמצא ברשימה
+        ///     בדיקה אם איבר נמצא ברשימה
         /// </summary>
         /// <param name="entity">האיבר לחיפוש</param>
         /// <returns>true - object Exist / false - object Dosn't Exist</returns>
-        public virtual bool Exist (T entity)
+        public virtual bool Exist(T entity)
         {
             T t;
             return Exist(entity, out t);
         }
 
         /// <summary>
-        /// בדיקה אם איבר נמצא ברשימה
+        ///     בדיקה אם איבר נמצא ברשימה
         /// </summary>
         /// <param name="entity">האיבר לחיפוש</param>
         /// <param name="existEntity">האיבר שנמצא</param>
@@ -361,17 +386,19 @@ namespace MODEL
         public abstract bool Exist(T entity, out T existEntity);
 
         /// <summary>
-        /// מיון הרשימה
+        ///     מיון הרשימה
         /// </summary>
         protected new abstract void Sort();
 
         /// <summary>
-        ///                  פעולות נוספות הדרושות לרשימה ספציפית
-        ///                           הפעולה מתבצעת ברשימה ספציפית
-        /// אם לא נדרשת פעולה אין לרשום את המטודה ברשימה ספציפית
+        ///     פעולות נוספות הדרושות לרשימה ספציפית
+        ///     הפעולה מתבצעת ברשימה ספציפית
+        ///     אם לא נדרשת פעולה אין לרשום את המטודה ברשימה ספציפית
         /// </summary>
         /// <param name="entity">האיבר עליו מתבצעת הפעולה</param>
-        public virtual void SetObjects(T entity) { }
+        public virtual void SetObjects(T entity)
+        {
+        }
 
         #endregion ABSTRACT / VIRTUAL METHODS
     }

@@ -1,27 +1,27 @@
-﻿using System;
-namespace MODEL
+﻿namespace MODEL
 {
     public class SideEffect : BaseEntity
     {
-        private string name;
         public SideEffect()
         {
         }
+
         public SideEffect(string name)
         {
-            this.name = name;
+            this.Name = name;
         }
-        public string Name { get => name; set => name = value; }
+
+        public string Name { get; set; }
 
         public override bool Equals(object obj)
         {
             return obj is SideEffect efect &&
-                   name == efect.name;
+                   Name == efect.Name;
         }
 
         public override bool Validate()
         {
-            return !string.IsNullOrEmpty(name);
+            return !string.IsNullOrEmpty(Name);
         }
     }
 }

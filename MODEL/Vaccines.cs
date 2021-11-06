@@ -1,14 +1,4 @@
-﻿using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DAL.FIRESTORE;
 
 namespace MODEL
@@ -19,6 +9,7 @@ namespace MODEL
         {
             return await FireStoreDbTable<Vaccine, Vaccines>.SelectAll();
         }
+
         public override bool Exist(Vaccine entity, out Vaccine existEntity)
         {
             existEntity = null;
@@ -34,7 +25,7 @@ namespace MODEL
 
         public static async Task<Vaccines> GetVaccines(User user)
         {
-            var vaccines =  await FireStoreDbTable<Vaccine, Vaccines>.Query("UserNo", user.Tz);
+            var vaccines = await FireStoreDbTable<Vaccine, Vaccines>.Query("UserNo", user.Tz);
             if (vaccines == null)
                 return new Vaccines();
             vaccines.Sort();
@@ -56,7 +47,7 @@ namespace MODEL
             if (DeleteList.Count > 0)
                 foreach (Vaccine v in DeleteList)
                     await FireStoreDbTable<Vaccine, Vaccines>.Delete(v);
-            
+
             return base.Save();
         }
     }

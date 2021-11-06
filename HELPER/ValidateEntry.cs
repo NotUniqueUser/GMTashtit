@@ -1,25 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace HELPER
 {
     /// <summary>
-    /// בדיקות תקינות קלט
+    ///     בדיקות תקינות קלט
     /// </summary>
     public class ValidateEntry : BaseValidateEntry
     {
+        public enum CreditCardCompanies
+        {
+            VISA,
+            VISA_LEUMI,
+            ISRACARD,
+            MASTERCARD,
+            DINERS,
+            AMERICANEXPRESS
+        }
+
         /// <summary>
-        /// בדיקת שם עברי
+        ///     בדיקת שם עברי
         /// </summary>
         /// <param name="name">השם לבדיקה</param>
         /// <param name="notEmpty">האם חייב להיות מלא</param>
         /// <returns>תקין/שגוי</returns>
         public static ErrorStatus CheckHebrewName(string name, bool notEmpty)
         {
-            ErrorStatus status = ErrorStatus.NONE;
+            var status = ErrorStatus.NONE;
 
             if (name == "")
             {
@@ -29,9 +37,9 @@ namespace HELPER
             else
             {
                 // האם מכיל את התווים החוקיים ותו ראשון שונה מאות סופית ולפחות 2 תווים
-                if (!IsLegalChars(name, hebChars + hebEndChars + otherChars)    ||
-                     IsLegalChars(name[0].ToString(), hebEndChars + otherChars) ||
-                     name.Length < 2)
+                if (!IsLegalChars(name, hebChars + hebEndChars + otherChars) ||
+                    IsLegalChars(name[0].ToString(), hebEndChars + otherChars) ||
+                    name.Length < 2)
                     status = ErrorStatus.ERROR;
             }
 
@@ -39,14 +47,14 @@ namespace HELPER
         }
 
         /// <summary>
-        /// בדיקת שם אנגלי
+        ///     בדיקת שם אנגלי
         /// </summary>
         /// <param name="name">השם לבדיקה</param>
         /// <param name="notEmpty">האם חייב להיות מלא</param>
         /// <returns>תקין/שגוי</returns>
         public static ErrorStatus CheckEnglishName(string name, bool notEmpty)
         {
-            ErrorStatus status = ErrorStatus.NONE;
+            var status = ErrorStatus.NONE;
 
             if (name == "")
             {
@@ -64,14 +72,14 @@ namespace HELPER
         }
 
         /// <summary>
-        /// תבדיקת כתובת עברי
+        ///     תבדיקת כתובת עברי
         /// </summary>
         /// <param name="name">השם לבדיקה</param>
         /// <param name="notEmpty">האם חייב להיות מלא</param>
         /// <returns>תקין/שגוי</returns>
         public static ErrorStatus CheckHebrewAddress(string name, bool notEmpty)
         {
-            ErrorStatus status = ErrorStatus.NONE;
+            var status = ErrorStatus.NONE;
 
             if (name == "")
             {
@@ -89,7 +97,7 @@ namespace HELPER
         }
 
         /// <summary>
-        /// בדיקת מס' תעודת זהות
+        ///     בדיקת מס' תעודת זהות
         /// </summary>
         /// <param name="id">ת.ז.</param>
         /// <param name="notEmpty">האם חייב להיות מלא</param>
@@ -100,7 +108,7 @@ namespace HELPER
             //int sum = 0;
             //int mult;
 
-            ErrorStatus status = ErrorStatus.NONE;
+            var status = ErrorStatus.NONE;
 
             if (id == "")
             {
@@ -140,31 +148,29 @@ namespace HELPER
         }
 
         /// <summary>
-        /// מנקה מחרוזת מספרים מכל תו שונה מסי]רה
+        ///     מנקה מחרוזת מספרים מכל תו שונה מסי]רה
         /// </summary>
         /// <param name="number">המספר לטיפול</param>
         /// <returns>מחרוזת המורכבת מספרות בלבד</returns>
         private static string JustDigits(string number)
         {
-            string cc = "";
-            foreach (char c in number)
+            var cc = "";
+            foreach (var c in number)
                 if (c >= '0' && c <= '9')
                     cc += c;
 
             return cc;
         }
 
-        public enum CreditCardCompanies { VISA, VISA_LEUMI, ISRACARD, MASTERCARD, DINERS, AMERICANEXPRESS };
-
         /// <summary>
-        /// בדיקת מס' כרטיס אשראי
+        ///     בדיקת מס' כרטיס אשראי
         /// </summary>
         /// <param name="creditCard">(מס' כרטיס האשראי (ללא ישראכארד</param>
         /// <param name="notEmpty">האם חייב להיות מלא</param>
         /// <returns>תקין/שגוי</returns>
         private static ErrorStatus CheckCreditCardNumber(string creditCard, bool notEmpty)
         {
-            ErrorStatus status = ErrorStatus.NONE;
+            var status = ErrorStatus.NONE;
 
             if (creditCard == "")
             {
@@ -173,7 +179,7 @@ namespace HELPER
             }
             else
             {
-                string cc = JustDigits(creditCard);
+                var cc = JustDigits(creditCard);
 
                 if (cc.Length >= 11 && cc.Length <= 19 && Global.IsLuhn(cc))
                     status = ErrorStatus.NONE;
@@ -185,8 +191,8 @@ namespace HELPER
         }
 
         /// <summary>
-        /// בדיקת מס' כרטיס אשראי כולל ישראכארד
-        /// http://halemo.net/info/isracard/index.html
+        ///     בדיקת מס' כרטיס אשראי כולל ישראכארד
+        ///     http://halemo.net/info/isracard/index.html
         /// </summary>
         /// <param name="creditCard">מס' כרטיס האשראי</param>
         /// <param name="isIsraCard">האם כרטיס אשראי ישראכארד</param>
@@ -194,7 +200,7 @@ namespace HELPER
         /// <returns>תקין/שגוי</returns>
         public static ErrorStatus CheckCreditCardNumber(string creditCard, CreditCardCompanies company, bool notEmpty)
         {
-            ErrorStatus status = ErrorStatus.NONE;
+            var status = ErrorStatus.NONE;
 
             if (company != CreditCardCompanies.ISRACARD)
             {
@@ -202,64 +208,62 @@ namespace HELPER
 
                 if (status == ErrorStatus.NONE)
                 {
-                    string cc = JustDigits(creditCard);
+                    var cc = JustDigits(creditCard);
 
                     switch (company)
                     {
                         case CreditCardCompanies.AMERICANEXPRESS:
-                            {
-                                if (cc.Length != 15 || !(new List<string> { "24", "37" }).Contains(cc.Substring(0, 2)))
-                                    status = ErrorStatus.ERROR;
-                                break;
-                            }
+                        {
+                            if (cc.Length != 15 || !new List<string> {"24", "37"}.Contains(cc.Substring(0, 2)))
+                                status = ErrorStatus.ERROR;
+                            break;
+                        }
 
                         case CreditCardCompanies.DINERS:
-                            {
-                                if (cc.Length != 14 || !(new List<string> { "30", "36", "38" }).Contains(cc.Substring(0, 2)))
-                                    status = ErrorStatus.ERROR;
-                                break;
-                            }
+                        {
+                            if (cc.Length != 14 || !new List<string> {"30", "36", "38"}.Contains(cc.Substring(0, 2)))
+                                status = ErrorStatus.ERROR;
+                            break;
+                        }
 
                         case CreditCardCompanies.MASTERCARD:
-                            {
-                                if (cc.Length != 16 || !(new List<string> { "51", "52", "53", "54", "55" }).Contains(cc.Substring(0, 2)))
-                                    status = ErrorStatus.ERROR;
-                                break;
-                            }
+                        {
+                            if (cc.Length != 16 ||
+                                !new List<string> {"51", "52", "53", "54", "55"}.Contains(cc.Substring(0, 2)))
+                                status = ErrorStatus.ERROR;
+                            break;
+                        }
 
                         case CreditCardCompanies.VISA:
                         case CreditCardCompanies.VISA_LEUMI:
-                            {
-                                if (cc.Length != 16 || cc[0] != '4')
-                                    status = ErrorStatus.ERROR;
-                                break;
-                            }
-
-                        default:
-                            {
-                                break;
-                            }
+                        {
+                            if (cc.Length != 16 || cc[0] != '4')
+                                status = ErrorStatus.ERROR;
+                            break;
+                        }
                     }
                 }
             }
             else
             {
-                string cc = JustDigits(creditCard);
+                var cc = JustDigits(creditCard);
 
                 if (cc.Length < 8 || cc.Length > 9)
+                {
                     status = ErrorStatus.ERROR;
+                }
                 else
                 {
                     if (cc.Length == 8)
                         cc = "0" + creditCard;
 
-                    int multiplier  = 1;
-                    int sumOfDigits = 0;
+                    var multiplier = 1;
+                    var sumOfDigits = 0;
 
-                    for (int i = cc.Length - 1; i >= 0; i--)
+                    for (var i = cc.Length - 1; i >= 0; i--)
                         sumOfDigits += (cc[i] - '0') * multiplier++;
 
-                    status = (sumOfDigits % 11 == 0) ? ErrorStatus.NONE : ErrorStatus.ERROR;
+                    status = sumOfDigits % 11 == 0 ? ErrorStatus.NONE : ErrorStatus.ERROR;
                 }
             }
 
@@ -267,14 +271,14 @@ namespace HELPER
         }
 
         /// <summary>
-        /// בדיקת איזור חיוג
+        ///     בדיקת איזור חיוג
         /// </summary>
         /// <param name="areaCode">א. חיוג</param>
         /// <param name="notEmpty">האם חייב להיות מלא</param>
         /// <returns>תקין/שגוי</returns>
         public static ErrorStatus CheckAreaCode(string areaCode, bool notEmpty)
         {
-            ErrorStatus status = ErrorStatus.NONE;
+            var status = ErrorStatus.NONE;
 
             if (areaCode == "")
             {
@@ -283,7 +287,7 @@ namespace HELPER
             }
             else
             {
-                string regEx = @"\b[0][0,2-9]{1,2}\b";
+                var regEx = @"\b[0][0,2-9]{1,2}\b";
                 if (!Regex.IsMatch(areaCode, regEx))
                     status = ErrorStatus.ERROR;
             }
@@ -292,14 +296,14 @@ namespace HELPER
         }
 
         /// <summary>
-        /// בדיקת מס' טלפון
+        ///     בדיקת מס' טלפון
         /// </summary>
         /// <param name="phone">מס' טלפון</param>
         /// <param name="notEmpty">האם חייב להיות מלא</param>
         /// <returns>תקין/שגוי</returns>
         public static ErrorStatus CheckPhone(string phone, bool notEmpty)
         {
-            ErrorStatus status = ErrorStatus.NONE;
+            var status = ErrorStatus.NONE;
 
             if (phone == "")
             {
@@ -308,7 +312,7 @@ namespace HELPER
             }
             else
             {
-                string regEx = @"\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})";
+                var regEx = @"\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})";
                 if (!Regex.IsMatch(phone, regEx))
                     status = ErrorStatus.ERROR;
             }
@@ -317,14 +321,14 @@ namespace HELPER
         }
 
         /// <summary>
-        /// בדיקת כתובת דואר אלקטרוני
+        ///     בדיקת כתובת דואר אלקטרוני
         /// </summary>
         /// <param name="email">כתובת דוא"ל</param>
         /// <param name="notEmpty">האם חייב להיות מלא</param>
         /// <returns>תקין/שגוי</returns>
         public static ErrorStatus CheckEMail(string email, bool notEmpty)
         {
-            ErrorStatus status = ErrorStatus.NONE;
+            var status = ErrorStatus.NONE;
 
             if (email == "")
             {
@@ -333,8 +337,9 @@ namespace HELPER
             }
             else
             {
-                string regEx = @"^(?("")("".+?(?<!\\)""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))" +
-                               @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9][\-a-z0-9]{0,22}[a-z0-9]))$";
+                var regEx =
+                    @"^(?("")("".+?(?<!\\)""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))" +
+                    @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9][\-a-z0-9]{0,22}[a-z0-9]))$";
                 if (!Regex.IsMatch(email, regEx, RegexOptions.IgnoreCase))
                     status = ErrorStatus.ERROR;
             }
@@ -344,7 +349,7 @@ namespace HELPER
 
         public static ErrorStatus CheckURL(string url, bool notEmpty)
         {
-            ErrorStatus status = ErrorStatus.NONE;
+            var status = ErrorStatus.NONE;
 
             if (url == "")
             {
@@ -361,14 +366,14 @@ namespace HELPER
         }
 
         /// <summary>
-        /// בדיקת מיקוד
+        ///     בדיקת מיקוד
         /// </summary>
         /// <param name="zip">מיקוד</param>
         /// <param name="notEmpty">האם חייב להיות מלא</param>
         /// <returns>תקין/שגוי</returns>
         public static ErrorStatus CheckZip(string zip, bool notEmpty)
         {
-            ErrorStatus status = ErrorStatus.NONE;
+            var status = ErrorStatus.NONE;
 
             if (zip == "")
             {
@@ -377,7 +382,7 @@ namespace HELPER
             }
             else
             {
-                string regEx = @"\b[2-9][0-9]{6}\b";
+                var regEx = @"\b[2-9][0-9]{6}\b";
                 if (!Regex.IsMatch(zip, regEx))
                     status = ErrorStatus.ERROR;
             }
@@ -386,14 +391,14 @@ namespace HELPER
         }
 
         /// <summary>
-        /// בדיקת שדה תאריך
+        ///     בדיקת שדה תאריך
         /// </summary>
         /// <param name="date">מחרוזת התאריך לבדיקה</param>
         /// <param name="notEmpty">האם חייב להיות מלא</param>
         /// <returns>ב</returns>
         public static ErrorStatus CheckDate(object date, bool notEmpty)
         {
-            ErrorStatus status = ErrorStatus.NONE;
+            var status = ErrorStatus.NONE;
 
             if (date.ToString() == "")
             {
@@ -404,16 +409,15 @@ namespace HELPER
             {
                 if (!Global.IsDate(date))
                     status = ErrorStatus.ERROR;
-                else
-                    if (notEmpty && DateTime.Parse(date.ToString()) == DateTime.MinValue)
-                        status = ErrorStatus.EMPTY;
+                else if (notEmpty && DateTime.Parse(date.ToString()) == DateTime.MinValue)
+                    status = ErrorStatus.EMPTY;
             }
 
             return status;
         }
 
         /// <summary>
-        /// בדיקת שדה תאריך בטווח תאריכים
+        ///     בדיקת שדה תאריך בטווח תאריכים
         /// </summary>
         /// <param name="date">מחרוזת התאריך לבדיקה</param>
         /// <param name="startDate">תאריך התחלה</param>
@@ -424,7 +428,7 @@ namespace HELPER
         {
             DateTime dateToCheck;
 
-            ErrorStatus status = CheckDate(date, notEmpty);
+            var status = CheckDate(date, notEmpty);
 
             if (status != ErrorStatus.EMPTY)
             {
@@ -440,7 +444,7 @@ namespace HELPER
         }
 
         /// <summary>
-        /// בדיקת שדה תאריך בטווח תאריכים
+        ///     בדיקת שדה תאריך בטווח תאריכים
         /// </summary>
         /// <param name="date">מחרוזת התאריך לבדיקה</param>
         /// <param name="startDate">תאריך התחלה</param>
@@ -451,10 +455,12 @@ namespace HELPER
         {
             DateTime dateStart;
             DateTime dateEnd;
-            bool     isDateOK = true;
+            var isDateOK = true;
 
             if (Global.IsDate(startDate))
+            {
                 dateStart = Convert.ToDateTime(startDate);
+            }
             else
             {
                 isDateOK = false;
@@ -462,7 +468,9 @@ namespace HELPER
             }
 
             if (Global.IsDate(endDate))
+            {
                 dateEnd = Convert.ToDateTime(endDate);
+            }
             else
             {
                 isDateOK = false;
@@ -471,12 +479,11 @@ namespace HELPER
 
             if (isDateOK)
                 return CheckDate(date, dateStart, dateEnd, notEmpty);
-            else
-                return ErrorStatus.ERROR;
+            return ErrorStatus.ERROR;
         }
 
         /// <summary>
-        /// בדיקת שדה תאריך בטווח גילאים
+        ///     בדיקת שדה תאריך בטווח גילאים
         /// </summary>
         /// <param name="date">מחרוזת התאריך לבדיקה</param>
         /// <param name="starminYeartDate">יל מינימום</param>
@@ -486,9 +493,9 @@ namespace HELPER
         public static ErrorStatus CheckDate(object date, double minYear, double maxYear, bool notEmpty)
         {
             DateTime dateToCheck;
-            double   age;
+            double age;
 
-            ErrorStatus status = CheckDate(date, notEmpty);
+            var status = CheckDate(date, notEmpty);
 
             if (status != ErrorStatus.EMPTY)
             {
@@ -505,14 +512,14 @@ namespace HELPER
         }
 
         /// <summary>
-        /// בדיקת שדה זמן
+        ///     בדיקת שדה זמן
         /// </summary>
         /// <param name="time">מחרוזת הזמן לבדיקה</param>
         /// <param name="notEmpty">האם חייב להיות מלא</param>
         /// <returns>האם חייב להיות מלא</returns>
         public static ErrorStatus CheckTime(object time, bool notEmpty)
         {
-            ErrorStatus status = ErrorStatus.NONE;
+            var status = ErrorStatus.NONE;
 
             if (Convert.ToString(time) == "")
             {
@@ -523,17 +530,15 @@ namespace HELPER
             {
                 if (!Global.IsTime(time))
                     status = ErrorStatus.ERROR;
-                else
-                    if (!notEmpty)
-                        status = ErrorStatus.EMPTY;
-
+                else if (!notEmpty)
+                    status = ErrorStatus.EMPTY;
             }
 
             return status;
         }
 
         /// <summary>
-        /// בדיקת שדה זמן בטווח זמנים
+        ///     בדיקת שדה זמן בטווח זמנים
         /// </summary>
         /// <param name="time">מחרוזת הזמן לבדיקה</param>
         /// <param name="startTime">זמן התחלה</param>
@@ -544,7 +549,7 @@ namespace HELPER
         {
             DateTime timeToCheck;
 
-            ErrorStatus status = CheckTime(time, notEmpty);
+            var status = CheckTime(time, notEmpty);
 
             if (status != ErrorStatus.EMPTY)
             {
@@ -560,7 +565,7 @@ namespace HELPER
         }
 
         /// <summary>
-        /// בדיקת שדה זמן בטווח זמנים
+        ///     בדיקת שדה זמן בטווח זמנים
         /// </summary>
         /// <param name="time">מחרוזת הזמן לבדיקה</param>
         /// <param name="startTime">זמן התחלה</param>
@@ -571,10 +576,12 @@ namespace HELPER
         {
             DateTime timeStart;
             DateTime timeEnd;
-            bool     isTimeOK = true;
+            var isTimeOK = true;
 
             if (Global.IsDate(startTime))
+            {
                 timeStart = Convert.ToDateTime(startTime);
+            }
             else
             {
                 isTimeOK = false;
@@ -582,7 +589,9 @@ namespace HELPER
             }
 
             if (Global.IsDate(endTime))
+            {
                 timeEnd = Convert.ToDateTime(endTime);
+            }
             else
             {
                 isTimeOK = false;
@@ -591,18 +600,17 @@ namespace HELPER
 
             if (isTimeOK)
                 return CheckDate(date, timeStart, timeEnd, notEmpty);
-            else
-                return ErrorStatus.ERROR;
+            return ErrorStatus.ERROR;
         }
 
         /// <summary>
-        /// ComboBox-בדיקת אם נבחר איבר חוקי ב
+        ///     ComboBox-בדיקת אם נבחר איבר חוקי ב
         /// </summary>
         /// <param name="value">ComboBox של slectedValue-ה</param>
         /// <returns></returns>
         public static ErrorStatus CheckCombo(int value)
         {
-            ErrorStatus status = ErrorStatus.NONE;
+            var status = ErrorStatus.NONE;
 
             if (value == 0)
                 status = ErrorStatus.EMPTY;
@@ -611,14 +619,14 @@ namespace HELPER
         }
 
         /// <summary>
-        /// בדיקת מספר שלם
+        ///     בדיקת מספר שלם
         /// </summary>
         /// <param name="num">המספר לבדיקה</param>
         /// <param name="notEmpty">האם חייב להיות מלא</param>
         /// <returns></returns>
         public static ErrorStatus CheckInteger(object num, bool notEmpty)
         {
-            ErrorStatus status = ErrorStatus.NONE;
+            var status = ErrorStatus.NONE;
 
             if (Convert.ToString(num) == "")
             {
@@ -627,7 +635,7 @@ namespace HELPER
             }
             else
             {
-                if (!(num is Int16 || num is Int32 || num is Int64))
+                if (!(num is short || num is int || num is long))
                     status = ErrorStatus.ERROR;
             }
 
@@ -635,7 +643,7 @@ namespace HELPER
         }
 
         /// <summary>
-        /// בדיקת מספר שלם בטווח
+        ///     בדיקת מספר שלם בטווח
         /// </summary>
         /// <param name="num">המספר לבדיקה</param>
         /// <param name="minValue">ערך מינימום</param>
@@ -644,12 +652,12 @@ namespace HELPER
         /// <returns></returns>
         public static ErrorStatus CheckInteger(object num, int minValue, int maxValue, bool notEmpty)
         {
-            ErrorStatus status = CheckInteger(num, notEmpty);
+            var status = CheckInteger(num, notEmpty);
 
             if (status == ErrorStatus.NONE)
             {
-                int n = int.Parse(num.ToString());
-                
+                var n = int.Parse(num.ToString());
+
                 if (Global.IsNumberInRange(n, minValue, maxValue))
                     status = ErrorStatus.NONE;
                 else
@@ -660,14 +668,14 @@ namespace HELPER
         }
 
         /// <summary>
-        /// בדיקת מספר עשרוני
+        ///     בדיקת מספר עשרוני
         /// </summary>
         /// <param name="num">המספר לבדיקה</param>
         /// <param name="notEmpty">האם חייב להיות מלא</param>
         /// <returns></returns>
         public static ErrorStatus CheckDouble(object num, bool notEmpty)
         {
-            ErrorStatus status = ErrorStatus.NONE;
+            var status = ErrorStatus.NONE;
 
             if (Convert.ToString(num) == "")
             {
@@ -684,7 +692,7 @@ namespace HELPER
         }
 
         /// <summary>
-        /// בדיקת נספר עשרוני בטווח
+        ///     בדיקת נספר עשרוני בטווח
         /// </summary>
         /// <param name="num">המספר לבדיקה</param>
         /// <param name="minValue">ערך מינימום</param>
@@ -693,12 +701,12 @@ namespace HELPER
         /// <returns></returns>
         public static ErrorStatus CheckDouble(object num, double minValue, double maxValue, bool notEmpty)
         {
-            ErrorStatus status = CheckDouble(num, notEmpty);
+            var status = CheckDouble(num, notEmpty);
 
             if (status == ErrorStatus.NONE)
             {
-                double n = double.Parse(num.ToString());
-                
+                var n = double.Parse(num.ToString());
+
                 if (Global.IsNumberInRange(n, minValue, maxValue))
                     status = ErrorStatus.NONE;
                 else
@@ -709,14 +717,14 @@ namespace HELPER
         }
 
         /// <summary>
-        /// בדיקת מספר דצימאלי
+        ///     בדיקת מספר דצימאלי
         /// </summary>
         /// <param name="num">המספר לבדיקה</param>
         /// <param name="notEmpty">האם חייב להיות מלא</param>
         /// <returns></returns>
         public static ErrorStatus CheckDecimal(object num, bool notEmpty)
         {
-            ErrorStatus status = ErrorStatus.NONE;
+            var status = ErrorStatus.NONE;
 
             if (Convert.ToString(num) == "")
             {
@@ -733,7 +741,7 @@ namespace HELPER
         }
 
         /// <summary>
-        /// בדיקת מספר דצימאלי בטווח
+        ///     בדיקת מספר דצימאלי בטווח
         /// </summary>
         /// <param name="num">המספר לבדיקה</param>
         /// <param name="minValue">ערך מינימום</param>
@@ -742,11 +750,11 @@ namespace HELPER
         /// <returns></returns>
         public static ErrorStatus CheckDecimal(object num, decimal minValue, decimal maxValue, bool notEmpty)
         {
-            ErrorStatus status = CheckDecimal(num, notEmpty);
+            var status = CheckDecimal(num, notEmpty);
 
             if (status == ErrorStatus.NONE)
             {
-                decimal n = decimal.Parse(num.ToString());
+                var n = decimal.Parse(num.ToString());
 
                 if (n > minValue && n <= maxValue)
                     status = ErrorStatus.NONE;

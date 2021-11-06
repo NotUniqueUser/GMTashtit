@@ -1,9 +1,8 @@
-﻿using Android.Views;
+﻿using System.Collections.Generic;
+using Android.Views;
 using Android.Widget;
 using AndroidX.RecyclerView.Widget;
 using MODEL;
-using System;
-using System.Collections.Generic;
 
 namespace Android_X_Tashtit.ADAPTERS
 {
@@ -11,10 +10,12 @@ namespace Android_X_Tashtit.ADAPTERS
     {
         public ClinicsAdapter(RecyclerView recyclerView, List<Clinic> items, int? layoutId = null)
             : base(recyclerView, items, layoutId)
-        { }
+        {
+        }
+
         protected override void OnLookupViewItems(View layout, BaseViewHolder viewHolder)
         {
-            TextView name = layout.FindViewById<TextView>(Resource.Id.txtClinicsName);
+            var name = layout.FindViewById<TextView>(Resource.Id.txtClinicsName);
 
             viewHolder.AddView(name, "name");
         }

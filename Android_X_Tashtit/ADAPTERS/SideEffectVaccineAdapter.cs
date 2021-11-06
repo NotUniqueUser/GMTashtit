@@ -1,10 +1,7 @@
-using System;
-
 using Android.Views;
 using Android.Widget;
 using AndroidX.RecyclerView.Widget;
 using MODEL;
-using System.Collections.Generic;
 
 namespace Android_X_Tashtit.ADAPTERS
 {
@@ -12,11 +9,12 @@ namespace Android_X_Tashtit.ADAPTERS
     {
         public SideEffectsVaccineAdapter(RecyclerView recyclerView, VaccineSideEffects items, int? layoutId = null)
             : base(recyclerView, items, layoutId)
-        { }
+        {
+        }
 
         protected override void OnLookupViewItems(View layout, BaseViewHolder viewHolder)
         {
-            TextView name = layout.FindViewById<TextView>(Resource.Id.txtSideEffectName);
+            var name = layout.FindViewById<TextView>(Resource.Id.txtSideEffectName);
 
             viewHolder.AddView(name, "name");
         }

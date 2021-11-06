@@ -1,18 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
-using System.Threading.Tasks;
-using System.Buffers.Binary;
 
 namespace HELPER
 {
     public class Serializer
     {
         // Convert an object to a byte array
-        public static byte[] ObjectToByteArray(Object obj)
+        public static byte[] ObjectToByteArray(object obj)
         {
             var bf = new BinaryFormatter();
             using (var ms = new MemoryStream())
@@ -23,7 +17,7 @@ namespace HELPER
         }
 
         // Convert a byte array to an Object
-        public static Object ByteArrayToObject(byte[] arrBytes)
+        public static object ByteArrayToObject(byte[] arrBytes)
         {
             using (var memStream = new MemoryStream())
             {

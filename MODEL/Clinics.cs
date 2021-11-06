@@ -1,15 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DAL.FIRESTORE;
 
 namespace MODEL
 {
     public class Clinics : BaseList_FS<Clinic>
     {
-        public Clinics()
-        {
-        }
-
         public override bool Exist(Clinic entity, out Clinic existEntity)
         {
             existEntity = Find(item => item.Name.Equals(entity.Name));
@@ -23,7 +18,7 @@ namespace MODEL
 
         public async Task<Clinics> SelectAll()
         {
-            Clinics sideEffects = await FireStoreDbTable<Clinic, Clinics>.SelectAll("Name", Order_By_Direction.ACSCENDING);
+            var sideEffects = await FireStoreDbTable<Clinic, Clinics>.SelectAll("Name");
             return sideEffects;
         }
 
@@ -32,15 +27,15 @@ namespace MODEL
             GenereteUpdateLists();
 
             if (InsertList.Count > 0)
-                foreach (Clinic c in InsertList)
+                foreach (var c in InsertList)
                     await FireStoreDbTable<Clinic, Clinics>.Insert(c);
 
             if (UpdateList.Count > 0)
-                foreach (Clinic c in UpdateList)
+                foreach (var c in UpdateList)
                     await FireStoreDbTable<Clinic, Clinics>.Update(c);
 
             if (DeleteList.Count > 0)
-                foreach (Clinic c in DeleteList)
+                foreach (var c in DeleteList)
                     await FireStoreDbTable<Clinic, Clinics>.Delete(c);
 
             return base.Save();

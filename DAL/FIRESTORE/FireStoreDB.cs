@@ -1,33 +1,22 @@
 ﻿using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 using Firebase;
 using Plugin.CloudFirestore;
-using Xamarin.Essentials;
 
 namespace DAL.FIRESTORE
 {
     public class FireStoreDB
     {
-        private static FireStoreDB instance = null;
-        public         FirebaseApp app;
-        private static IFirestore  connection = null;
+        private static FireStoreDB instance;
+        private static IFirestore connection;
 
         private static readonly object padlock = new object();
+        public FirebaseApp app;
 
         private FireStoreDB()
         {
             // app = FirebaseApp.InitializeApp((Context)AppInfo.PackageName);
 
-            FirebaseOptions options = new FirebaseOptions.Builder()
+            var options = new FirebaseOptions.Builder()
                 .SetProjectId("confident-sweep-298817")
                 .SetApplicationId("confident-sweep-298817")
                 .SetApiKey("AIzaSyCXm9HJJwpHxSkDAhWWC8bdi2VG8hALSt0")
@@ -44,15 +33,10 @@ namespace DAL.FIRESTORE
             get
             {
                 if (connection == null)
-                {
                     lock (padlock)
                     {
-                        if (connection == null)
-                        {
-                            instance = new FireStoreDB();
-                        }
+                        if (connection == null) instance = new FireStoreDB();
                     }
-                }
 
                 return connection;
             }
@@ -63,15 +47,11 @@ namespace DAL.FIRESTORE
             get
             {
                 if (instance == null)
-                {
                     lock (padlock)
                     {
-                        if (instance == null)
-                        {
-                            instance = new FireStoreDB();
-                        }
+                        if (instance == null) instance = new FireStoreDB();
                     }
-                }
+
                 return instance;
             }
         }

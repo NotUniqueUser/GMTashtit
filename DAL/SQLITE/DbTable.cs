@@ -1,16 +1,8 @@
-﻿using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-
-using SQLite;
 using System.Linq.Expressions;
+using SQLite;
 
 /*
   https://docs.microsoft.com/en-us/xamarin/android/data-cloud/data-access/using-sqlite-orm
@@ -24,7 +16,7 @@ namespace DAL.SQLITE
 {
     public class DbTable<T> where T : new()
     {
-        private readonly static SQLiteConnection db;
+        private static readonly SQLiteConnection db;
         private static readonly object locker = new object();
 
         static DbTable()
@@ -112,14 +104,9 @@ namespace DAL.SQLITE
         {
             lock (locker)
             {
-                if ((int)entity.GetType().GetProperty("Id").GetValue(entity, null) != 0)
-                {
+                if ((int) entity.GetType().GetProperty("Id").GetValue(entity, null) != 0)
                     return Update(entity);
-                }
-                else
-                {
-                    return Insert(entity);
-                }
+                return Insert(entity);
             }
         }
 
@@ -223,7 +210,8 @@ namespace DAL.SQLITE
             }
         }
 
-        public List<T> Get<TValue>(Expression<Func<T, bool>> predicate = null, Expression<Func<T, TValue>> orderBy = null)
+        public List<T> Get<TValue>(Expression<Func<T, bool>> predicate = null,
+            Expression<Func<T, TValue>> orderBy = null)
         {
             var query = db.Table<T>();
 
@@ -231,7 +219,7 @@ namespace DAL.SQLITE
                 query = query.Where(predicate);
 
             if (orderBy != null)
-                query = query.OrderBy<TValue>(orderBy);
+                query = query.OrderBy(orderBy);
 
             return query.ToList<T>();
         }

@@ -1,36 +1,33 @@
-﻿using System;
-namespace MODEL
+﻿namespace MODEL
 {
     public class Clinic : BaseEntity
     {
-        private string name;
-
         public Clinic()
         {
         }
 
         public Clinic(string name)
         {
-            this.name = name;
+            this.Name = name;
         }
 
-        public string Name { get => name; set => name = value; }
+        public string Name { get; set; }
 
         public override string ToString()
         {
-            return name;
+            return Name;
         }
 
         public override bool Equals(object obj)
         {
             return obj is Clinic clinic &&
                    base.Equals(obj) &&
-                   name == clinic.name;
+                   Name == clinic.Name;
         }
 
         public override bool Validate()
         {
-            return !string.IsNullOrEmpty(name);
+            return !string.IsNullOrEmpty(Name);
         }
     }
 }

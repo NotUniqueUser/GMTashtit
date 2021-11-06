@@ -1,14 +1,7 @@
-﻿using Android.App;
-using Android.Content;
+﻿using System;
+using Android.App;
 using Android.OS;
-using Android.Runtime;
-using Android.Views;
 using Android.Widget;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Android.Provider;
 using HELPER;
 using MODEL;
 
@@ -17,15 +10,15 @@ namespace Android_X_Tashtit.ACTIVITIES
     [Activity(Label = "UserVaccineActivity")]
     public class UserVaccineActivity : BaseActivity
     {
-        private EditText uvEtTz;
-        private Button uvBtnLoad;
-        private TextView uvTvName;
-        private TextView[] uvTvDate;
-        private TextView[] uvTvWeeks;
-        private Button uvBtnVaccine;
-        private Button uvBtnFinish;
-        private Vaccines vaccines;
         private User user;
+        private Button uvBtnFinish;
+        private Button uvBtnLoad;
+        private Button uvBtnVaccine;
+        private EditText uvEtTz;
+        private TextView[] uvTvDate;
+        private TextView uvTvName;
+        private TextView[] uvTvWeeks;
+        private Vaccines vaccines;
 
         protected override void InitializeViews()
         {
@@ -36,16 +29,18 @@ namespace Android_X_Tashtit.ACTIVITIES
             uvBtnFinish = FindViewById<Button>(Resource.Id.uvBtnCancel);
             uvTvDate = new TextView[3];
             uvTvWeeks = new TextView[3];
-            for (int i = 0; i < uvTvDate.Length; i++)
+            for (var i = 0; i < uvTvDate.Length; i++)
             {
                 uvTvDate[i] = FindViewById<TextView>(Resources.GetIdentifier($"uvTvDate{i + 1}", "id", PACKAGE_NAME));
                 uvTvWeeks[i] = FindViewById<TextView>(Resources.GetIdentifier($"uvTvWeeks{i + 1}", "id", PACKAGE_NAME));
             }
-            for (int i = 0; i < uvTvDate.Length; i++)
+
+            for (var i = 0; i < uvTvDate.Length; i++)
             {
                 uvTvDate[i].Text = "";
                 uvTvWeeks[i].Text = "";
             }
+
             uvBtnLoad.Click += UvBtnLoadOnClick;
             uvBtnFinish.Click += UvBtnFinish_Click;
             uvBtnVaccine.Click += UvBtnVaccine_Click;
@@ -55,7 +50,7 @@ namespace Android_X_Tashtit.ACTIVITIES
         {
             if (user == null)
                 return;
-            Vaccine vaccine = new Vaccine(user.Tz, DateTime.Today);
+            var vaccine = new Vaccine(user.Tz, DateTime.Today);
             vaccines.Add(vaccine);
             await vaccines.Save();
             ReloadVaccines();
@@ -83,7 +78,7 @@ namespace Android_X_Tashtit.ACTIVITIES
 
                 ReloadVaccines();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Toast.MakeText(this, ex.Message, ToastLength.Long).Show();
             }
@@ -99,10 +94,10 @@ namespace Android_X_Tashtit.ACTIVITIES
             vaccines = await Vaccines.GetVaccines(user);
             if (vaccines == null || vaccines.Count < 1)
                 return;
-            for (int i = 0; i < vaccines.Count; i++)
+            for (var i = 0; i < vaccines.Count; i++)
             {
                 uvTvDate[i].Text = vaccines[i].Date.ToString("MM/dd/yyyy");
-                uvTvWeeks[i].Text = ((int)(DateTime.Today - vaccines[i].Date).TotalDays / 7).ToString();
+                uvTvWeeks[i].Text = ((int) (DateTime.Today - vaccines[i].Date).TotalDays / 7).ToString();
             }
         }
 

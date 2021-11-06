@@ -4,39 +4,36 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="10dp">
-    
-   <com.google.android.material.floatingactionbutton.FloatingActionButton
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAddUser"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="#00FFff"
-        android:src="@drawable/plus_transparent"
         android:layout_gravity="end|bottom"
         android:layout_margin="16dp"
-        />
+        android:backgroundTint="#00FFff"
+        android:src="@drawable/plus_transparent" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Users"
-        android:textSize="30dp"
-        android:textStyle="bold|italic"
-        android:textColor="#ff00ff"
-        android:gravity="center"
-        />
+        android:orientation="vertical">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvUsers"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:clipToPadding="false"
-        />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Users"
+            android:textColor="#ff00ff"
+            android:textSize="30dp"
+            android:textStyle="bold|italic" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvUsers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:clipToPadding="false" />
 
     </LinearLayout>
 

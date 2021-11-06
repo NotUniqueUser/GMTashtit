@@ -1,52 +1,38 @@
-﻿using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace DAL.FIRESTORE
 {
     public class GooleServiceJson
     {
-        private ProjectInfo projectInfo;
         private List<AClient> client;
+        private ProjectInfo projectInfo;
     }
 
     public class ProjectInfo
     {
-        private string projectNumber;
         private string firebaseUrl;
-        private string projectId;
         private string projectBucket;
+        private string projectId;
+        private string projectNumber;
     }
 
     public class AClient
     {
-
     }
 
     public class ClientInfo
     {
-
     }
 
     public class OuthClient
     {
-
     }
 
     public class ApiKey
     {
-
     }
 
     public class Services
     {
-
     }
 }

@@ -1,44 +1,39 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using HELPER;
 using Android.App;
 using Android.Content;
+using Android.Graphics;
 using Android.OS;
+using Android.Provider;
 using Android.Runtime;
-using Android.Views;
 using Android.Widget;
 using DE.Hdodenhof.Circleimageview;
+using HELPER;
 using MODEL;
-using Android.Graphics;
-using Android_X_Tashtit.ADAPTERS;
-using Android.Provider;
 
 namespace Android_X_Tashtit.ACTIVITIES
 {
     [Activity(Label = "UserActivity")]
     public class UserActivity : BaseActivity
     {
-        private CircleImageView imgUser;
+        private ArrayAdapter<Clinic> adapterClinic;
+        private ArrayAdapter<string> adapterUserType;
+        private Bitmap bitMap;
+        private ImageButton btnBirthDate;
+        private Button btnCancel;
+        private Button btnSave;
+        private Clinics clinics;
+        private DatePickerDialog datePicker;
+        private EditText etBirthDate;
+        private EditText etEmail;
         private EditText etFamily;
         private EditText etName;
-        private EditText etBirthDate;
-        private ImageButton btnBirthDate;
-        private EditText etEmail;
+        private EditText etPassword;
         private EditText etPhone;
         private EditText etTz;
-        private EditText etPassword;
-        private Button btnSave;
-        private Button btnCancel;
+        private CircleImageView imgUser;
         private Spinner spnClinic;
         private Spinner spnUserTypes;
-        private ArrayAdapter<string> adapterUserType;
-        private ArrayAdapter<Clinic> adapterClinic;
-        private DatePickerDialog datePicker;
         private User user;
-        private Clinics clinics;
-        private Bitmap bitMap;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
@@ -84,13 +79,13 @@ namespace Android_X_Tashtit.ACTIVITIES
             alertDialog.SetPositiveButton("Take new picture", (senderAlert, args)
                 =>
             {
-                Intent intent = new Intent(MediaStore.ActionImageCapture);
+                var intent = new Intent(MediaStore.ActionImageCapture);
                 StartActivityForResult(intent, 0);
             });
             alertDialog.SetNegativeButton("Choose image from gallery", (senderAlert, args)
                 =>
             {
-                Intent intent = new Intent();
+                var intent = new Intent();
                 intent.SetType("image/*");
                 intent.SetAction(Intent.ActionGetContent);
                 StartActivityForResult(intent, 1);
@@ -129,7 +124,6 @@ namespace Android_X_Tashtit.ACTIVITIES
             {
                 dt = DateTime.Today;
                 datePicker = new DatePickerDialog(this, OnDateClick, dt.Year, dt.Month - 1, dt.Day);
-
             }
             finally
             {
@@ -163,7 +157,7 @@ namespace Android_X_Tashtit.ACTIVITIES
             etPhone.Text = user.Phone;
             etBirthDate.Text = user.BirthDate.Day + "-" + user.BirthDate.Month + "-" + user.BirthDate.Year;
             etEmail.Text = user.Email;
-            spnClinic.SetSelection(clinics.FindIndex(item => (item.Id).ToString() == user.ClinicNo));
+            spnClinic.SetSelection(clinics.FindIndex(item => item.Id.ToString() == user.ClinicNo));
             if (user.Image != null)
             {
                 bitMap = BitMapHelper.Base64ToBitMap(user.Image);
@@ -177,7 +171,7 @@ namespace Android_X_Tashtit.ACTIVITIES
 
         private static string[] SeparateBirth(TextView tv)
         {
-            return tv.Text?.Split(new char[] {'/', '.', '-', ' '});
+            return tv.Text?.Split('/', '.', '-', ' ');
         }
 
         private void BtnSave_Click(object sender, EventArgs e)
@@ -193,8 +187,8 @@ namespace Android_X_Tashtit.ACTIVITIES
                 user.Type = Enum.TryParse(spnUserTypes.SelectedItem?.ToString(), out UserType ut) ? ut : UserType.USER;
                 user.Tz = etTz.Text;
                 user.Password = etPassword.Text;
-                user.BirthDate = new DateTime(Convert.ToInt32((dateParts[2])), Convert.ToInt32((dateParts[1])),
-                    Convert.ToInt32((dateParts[0])));
+                user.BirthDate = new DateTime(Convert.ToInt32(dateParts[2]), Convert.ToInt32(dateParts[1]),
+                    Convert.ToInt32(dateParts[0]));
                 user.ClinicNo = clinics[spnClinic.SelectedItemPosition].Id.ToString();
                 user.Image = bitMap != null ? BitMapHelper.BitMapToBase64(bitMap) : null;
 
@@ -229,7 +223,6 @@ namespace Android_X_Tashtit.ACTIVITIES
                 }
                 else if (requestCode == 1)
                 {
-
                     var uri = data.Data;
                     if (uri != null)
                     {
@@ -239,7 +232,6 @@ namespace Android_X_Tashtit.ACTIVITIES
 
                     bitMap = BitMapHelper.ReszieBitmap(bitMap, imgUser.Width);
                     imgUser.SetImageBitmap(bitMap);
-
                 }
             }
         }

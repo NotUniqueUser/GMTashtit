@@ -1,15 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Android.App;
+﻿using Android.App;
 using Android.Content;
-using Android.OS;
-using Android.Runtime;
 using Android.Views;
 using Android.Views.InputMethods;
-using Android.Widget;
 
 namespace HELPER
 {
@@ -20,21 +12,23 @@ namespace HELPER
         //    activity.Window.SetSoftInputMode(SoftInput.StateHidden); // getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         //}
 
-        public static void HideKeyboard(Android.App.Activity activity, bool onCreate = false)
+        public static void HideKeyboard(Activity activity, bool onCreate = false)
         {
             if (!onCreate)
             {
                 // Check if no view has focus:
-                View view = activity.CurrentFocus; // GetCurrentFocus();
+                var view = activity.CurrentFocus; // GetCurrentFocus();
                 if (view != null)
                 {
-                    Android.Views.InputMethods.InputMethodManager imm = (Android.Views.InputMethods.InputMethodManager)activity.GetSystemService(Context.InputMethodService /*INPUT_METHOD_SERVICE*/);
+                    var imm = (InputMethodManager) activity.GetSystemService(
+                        Context.InputMethodService /*INPUT_METHOD_SERVICE*/);
                     imm.HideSoftInputFromWindow(view.WindowToken /*GetWindowToken()*/, 0);
                 }
             }
             else
             {
-                activity.Window.SetSoftInputMode(SoftInput.StateHidden); // getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+                activity.Window.SetSoftInputMode(SoftInput
+                    .StateHidden); // getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
             }
         }
 
@@ -55,7 +49,7 @@ namespace HELPER
 
         public static void HideKeyboardFrom(Context context, View view)
         {
-            InputMethodManager imm = (InputMethodManager)context.GetSystemService(Activity.InputMethodService);
+            var imm = (InputMethodManager) context.GetSystemService(Context.InputMethodService);
             imm.HideSoftInputFromWindow(view.WindowToken, 0);
         }
     }

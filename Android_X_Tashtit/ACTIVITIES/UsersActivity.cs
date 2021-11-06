@@ -1,19 +1,14 @@
-﻿using Android.App;
+﻿using System;
+using Android.App;
 using Android.Content;
 using Android.OS;
 using Android.Runtime;
-using Android.Views;
 using Android.Widget;
-using AndroidX.RecyclerView.Widget;
-using DAL.SQLITE;
-using Google.Android.Material.FloatingActionButton;
-using MODEL;
 using Android_X_Tashtit.ADAPTERS;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using AndroidX.RecyclerView.Widget;
+using Google.Android.Material.FloatingActionButton;
 using HELPER;
+using MODEL;
 
 namespace Android_X_Tashtit.ACTIVITIES
 {
@@ -22,12 +17,12 @@ namespace Android_X_Tashtit.ACTIVITIES
     {
         private const int AddUserId = 1;
         private const int EditUserId = 2;
+        private FloatingActionButton fabAddUser;
+        private User oldUser;
+        private RecyclerView rvUsers;
 
         private Users users;
         private UsersAdapter usersAdapter;
-        private FloatingActionButton fabAddUser;
-        private RecyclerView rvUsers;
-        private User oldUser;
 
         protected override void InitializeViews()
         {
@@ -35,7 +30,7 @@ namespace Android_X_Tashtit.ACTIVITIES
             fabAddUser = FindViewById<FloatingActionButton>(Resource.Id.fabAddUser);
             rvUsers = FindViewById<RecyclerView>(Resource.Id.rvUsers);
             fabAddUser.Click += FabAddUser_Click;
-            
+
             RefreshUsers();
         }
 
@@ -72,7 +67,7 @@ namespace Android_X_Tashtit.ACTIVITIES
         private void EditUser(object sender, User e)
         {
             oldUser = e;
-            var intent = new Intent(this, typeof(ACTIVITIES.UserActivity));
+            var intent = new Intent(this, typeof(UserActivity));
             intent.PutExtra("user", Serializer.ObjectToByteArray(e));
             StartActivityForResult(intent, EditUserId);
         }
@@ -104,6 +99,7 @@ namespace Android_X_Tashtit.ACTIVITIES
                     await users.Save();
                     break;
             }
+
             usersAdapter.NotifyDataSetChanged();
             base.OnActivityResult(requestCode, resultCode, data);
         }

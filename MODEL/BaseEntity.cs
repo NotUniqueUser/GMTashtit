@@ -1,46 +1,65 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-
-using SQLite;
 using Plugin.CloudFirestore.Attributes;
+using SQLite;
 
 namespace MODEL
 {
-    public enum EntityStatus { ADDED, MODIFIED, DELETED, UNCHANGED }
+    public enum EntityStatus
+    {
+        ADDED,
+        MODIFIED,
+        DELETED,
+        UNCHANGED
+    }
 
     [Serializable]
     public abstract class BaseEntity
     {
-        private int          id;
-        private string       idfs;
         private EntityStatus entityStatus;
+        private int id;
+        private string idfs;
 
-        protected BaseEntity() : this(EntityStatus.UNCHANGED) { }
+        protected BaseEntity() : this(EntityStatus.UNCHANGED)
+        {
+        }
 
         protected BaseEntity(EntityStatus entityStatus)
         {
             this.entityStatus = entityStatus;
         }
 
-        public abstract bool Validate();
-
-        [PrimaryKey, AutoIncrement]     // SQlite
+        [PrimaryKey]
+        [AutoIncrement] // SQlite
         [Ignored]
-        public int Id { get => id; set => id = value; }
+        public int Id
+        {
+            get => id;
+            set => id = value;
+        }
 
-        [Id]                            // FireStore
+        [Id] // FireStore
         [Ignore]
-        public string IdFs { get => idfs; set => idfs = value; }
+        public string IdFs
+        {
+            get => idfs;
+            set => idfs = value;
+        }
 
-        [Ignore]                        // SQLite
-        [Ignored]                       // FireStore
-        public EntityStatus EntityStatus { get => entityStatus; set => entityStatus = value; }
+        [Ignore] // SQLite
+        [Ignored] // FireStore
+        public EntityStatus EntityStatus
+        {
+            get => entityStatus;
+            set => entityStatus = value;
+        }
+
+        public abstract bool Validate();
 
         public override bool Equals(object obj)
         {
             return obj is BaseEntity entity &&
-                   id           == entity.id &&
+                   id == entity.id &&
                    entityStatus == entity.entityStatus;
         }
 

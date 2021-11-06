@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 using Android.App;
-using Android.Content;
 using Android.OS;
-using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android_X_Tashtit.ADAPTERS;
@@ -20,19 +14,19 @@ namespace Android_X_Tashtit.ACTIVITIES
     [Activity(Label = "ClinicsActivity")]
     public class ClinicsActivity : BaseActivity
     {
-        private RecyclerView lvClinics;
-        private EditText etClinic;
-        private ImageButton btnOk;
+        private ClinicsAdapter adapter;
         private ImageButton btnCancel;
-        private TextView txtHeader;
-        private LinearLayout llData;
-        private FloatingActionButton fabAdd;
+        private ImageButton btnOk;
 
         private Clinics clinics;
+        private EditText etClinic;
+        private FloatingActionButton fabAdd;
+        private LinearLayout llData;
+        private RecyclerView lvClinics;
         private Clinic oldClinic;
-        private ClinicsAdapter adapter;
 
-        int position = -1;
+        private int position = -1;
+        private TextView txtHeader;
 
         protected override async void OnCreate(Bundle savedInstanceState)
         {
@@ -47,7 +41,7 @@ namespace Android_X_Tashtit.ACTIVITIES
             etClinic.Hint = "New clinic";
 
             clinics = new Clinics();
-            ProgressDialog progress = Global.SetProgress(this);
+            var progress = Global.SetProgress(this);
             clinics = await clinics.SelectAll();
             SetupRecyclerView();
             progress.Dismiss();
@@ -84,25 +78,26 @@ namespace Android_X_Tashtit.ACTIVITIES
             lvClinics.AddItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.Vertical));
 
             adapter.ItemSelected += Adapter_ItemSelected;
-            adapter.LongItemSelected += Adapter_LongItemSelected; ;
+            adapter.LongItemSelected += Adapter_LongItemSelected;
+            ;
         }
 
         private void Adapter_LongItemSelected(object sender, Clinic e)
         {
             position = clinics.FindIndex(item => item.Name == e.Name);
             Global.YesNoAlertDialog(this,
-                                    "Confim Delete",
-                                    "Once '" + clinics[position].Name + "' deleted the move cannot be undone",
-                                    "Yes",
-                                    "No",
-                                    Delete);
+                "Confim Delete",
+                "Once '" + clinics[position].Name + "' deleted the move cannot be undone",
+                "Yes",
+                "No",
+                Delete);
         }
 
         private async void Delete(bool obj)
         {
             if (obj)
             {
-                Clinic clinic = clinics[position];
+                var clinic = clinics[position];
                 clinics.Delete(clinic);
                 await clinics.Save();
                 adapter.NotifyDataSetChanged();
@@ -116,7 +111,7 @@ namespace Android_X_Tashtit.ACTIVITIES
             etClinic.Text = e.Name;
             llData.Visibility = ViewStates.Visible;
 
-            Keyboard.HideKeyboard(this, false);
+            Keyboard.HideKeyboard(this);
         }
 
         private void BtnCancel_Click(object sender, EventArgs e)
@@ -138,15 +133,15 @@ namespace Android_X_Tashtit.ACTIVITIES
 
         private void BtnOk_Click(object sender, EventArgs e)
         {
-            bool isNew = position == -1;
-            bool dataSetChanged = false;
+            var isNew = position == -1;
+            var dataSetChanged = false;
 
             llData.Visibility = ViewStates.Visible;
             Keyboard.HideKeyboard(this);
 
             if (etClinic.Text != "")
             {
-                Clinic clinic = new Clinic(etClinic.Text);
+                var clinic = new Clinic(etClinic.Text);
 
                 if (clinic.Validate())
                 {
@@ -173,7 +168,7 @@ namespace Android_X_Tashtit.ACTIVITIES
                     }
                     else
                     {
-                        AlertDialog.Builder alertDiag = new AlertDialog.Builder(this);
+                        var alertDiag = new AlertDialog.Builder(this);
 
                         alertDiag.SetTitle("Exists");
                         alertDiag.SetMessage(clinic.Name + " already exists");
@@ -181,7 +176,7 @@ namespace Android_X_Tashtit.ACTIVITIES
                         alertDiag.SetCancelable(true);
 
                         alertDiag.SetPositiveButton("OK", (senderAlert, args)
-                        =>
+                            =>
                         {
                             alertDiag.Dispose();
                         });
@@ -195,7 +190,6 @@ namespace Android_X_Tashtit.ACTIVITIES
                     Toast.MakeText(this, "City not validates", ToastLength.Short).Show();
                 }
             }
-        
         }
     }
 }

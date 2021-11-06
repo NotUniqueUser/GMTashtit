@@ -1,15 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using DAL.FIRESTORE;
 
 namespace MODEL
 {
     public class SideEffects : BaseList<SideEffect>
     {
-        public SideEffects()
-        {
-        }
-
         public override bool Exist(SideEffect entity, out SideEffect existEntity)
         {
             existEntity = Find(item => item.Name.Equals(entity.Name));
@@ -20,15 +15,16 @@ namespace MODEL
         {
             base.Sort((item1, item2) => item1.Name.CompareTo(item2.Name));
         }
+
         public static async Task<SideEffects> SelectAll()
         {
-            SideEffects sideEffects = await FireStoreDbTable<SideEffect, SideEffects>.SelectAll("Name", Order_By_Direction.ACSCENDING);
+            var sideEffects = await FireStoreDbTable<SideEffect, SideEffects>.SelectAll("Name");
             return sideEffects;
         }
 
         public static async Task<SideEffects> SelectById(string idFs)
         {
-            SideEffects sideEffects = await FireStoreDbTable<SideEffect, SideEffects>.QueryById(idFs);
+            var sideEffects = await FireStoreDbTable<SideEffect, SideEffects>.QueryById(idFs);
             return sideEffects ?? new SideEffects();
         }
 
@@ -37,15 +33,15 @@ namespace MODEL
             GenereteUpdateLists();
 
             if (InsertList.Count > 0)
-                foreach (SideEffect s in InsertList)
+                foreach (var s in InsertList)
                     await FireStoreDbTable<SideEffect, SideEffects>.Insert(s);
 
             if (UpdateList.Count > 0)
-                foreach (SideEffect s in UpdateList)
+                foreach (var s in UpdateList)
                     await FireStoreDbTable<SideEffect, SideEffects>.Update(s);
 
             if (DeleteList.Count > 0)
-                foreach (SideEffect s in DeleteList)
+                foreach (var s in DeleteList)
                     await FireStoreDbTable<SideEffect, SideEffects>.Delete(s);
 
             return base.Save();
@@ -57,7 +53,5 @@ namespace MODEL
         //     this.ForEach(item => effects += item.Name + ";");
         //     return effects;
         // }
-        
-        
     }
 }

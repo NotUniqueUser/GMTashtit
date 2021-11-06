@@ -1,42 +1,33 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 using Android.App;
-using Android.Content;
 using Android.OS;
-using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-
-using MODEL;
-using HELPER;
-using Java.Lang;
-using AndroidX.RecyclerView.Widget;
-
 using Android_X_Tashtit.ADAPTERS;
+using AndroidX.RecyclerView.Widget;
 using Google.Android.Material.FloatingActionButton;
+using HELPER;
+using MODEL;
 
 namespace Android_X_Tashtit.ACTIVITIES
 {
     [Activity(Label = "Cities")]
     public class CitiesActivity : BaseActivity
     {
-        private RecyclerView       lvCities;
-        private EditText           etCity;
-        private ImageButton        btnOk;
-        private ImageButton        btnCancel;
-        private TextView           txtHeader;
-        private LinearLayout         llData;
+        private CitiesAdapter adapter;
+        private ImageButton btnCancel;
+        private ImageButton btnOk;
+
+        private Cities cities;
+        private EditText etCity;
         private FloatingActionButton fabAdd;
+        private LinearLayout llData;
+        private RecyclerView lvCities;
+        private City oldCity;
 
-        private Cities             cities;
-        private City               oldCity;
-        private CitiesAdapter      adapter;
+        private int position = -1;
+        private TextView txtHeader;
 
-        int position = -1;
-        
         protected override async void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
@@ -47,10 +38,10 @@ namespace Android_X_Tashtit.ACTIVITIES
             InitializeViews();
 
             txtHeader.Text = "Cities list";
-            etCity.Hint    = "New City";
+            etCity.Hint = "New City";
 
             cities = new Cities();
-            ProgressDialog progress = Global.SetProgress(this);
+            var progress = Global.SetProgress(this);
             cities = await cities.SelectAll();
             SetupRecyclerView();
             progress.Dismiss();
@@ -65,15 +56,15 @@ namespace Android_X_Tashtit.ACTIVITIES
 
         protected override void InitializeViews()
         {
-            lvCities  = FindViewById<RecyclerView>(Resource.Id.lvCities);
-            etCity    = FindViewById<EditText>(Resource.Id.etCity);
-            btnOk     = FindViewById<ImageButton>(Resource.Id.btnOk);
+            lvCities = FindViewById<RecyclerView>(Resource.Id.lvCities);
+            etCity = FindViewById<EditText>(Resource.Id.etCity);
+            btnOk = FindViewById<ImageButton>(Resource.Id.btnOk);
             btnCancel = FindViewById<ImageButton>(Resource.Id.btnCancel);
             txtHeader = FindViewById<TextView>(Resource.Id.txtHeader);
-            fabAdd    = FindViewById<FloatingActionButton>(Resource.Id.fabAdd);
-            llData    = FindViewById<LinearLayout>(Resource.Id.llData);
+            fabAdd = FindViewById<FloatingActionButton>(Resource.Id.fabAdd);
+            llData = FindViewById<LinearLayout>(Resource.Id.llData);
 
-            btnOk.Click     += BtnOk_Click;
+            btnOk.Click += BtnOk_Click;
             btnCancel.Click += BtnCancel_Click;
 
             fabAdd.Click += delegate { llData.Visibility = ViewStates.Visible; };
@@ -86,26 +77,26 @@ namespace Android_X_Tashtit.ACTIVITIES
             lvCities.SetLayoutManager(new LinearLayoutManager(this));
             lvCities.AddItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.Vertical));
 
-            adapter.ItemSelected     += Adapter_ItemSelected;
+            adapter.ItemSelected += Adapter_ItemSelected;
             adapter.LongItemSelected += Adapter_LongItemSelected;
         }
 
         private void Adapter_LongItemSelected(object sender, City e)
         {
             position = cities.FindIndex(item => item.Name == e.Name);
-            Global.YesNoAlertDialog(this, 
-                                    "Confim Delete", 
-                                    "Once '" + cities[position].Name + "' deleted the move cannot be undone", 
-                                    "Yes", 
-                                    "No",
-                                    Delete);
+            Global.YesNoAlertDialog(this,
+                "Confim Delete",
+                "Once '" + cities[position].Name + "' deleted the move cannot be undone",
+                "Yes",
+                "No",
+                Delete);
         }
 
         private async void Delete(bool obj)
         {
             if (obj)
             {
-                City city = cities[position];
+                var city = cities[position];
                 cities.Delete(city);
                 await cities.Save();
 
@@ -115,25 +106,25 @@ namespace Android_X_Tashtit.ACTIVITIES
 
         private void Adapter_ItemSelected(object sender, City e)
         {
-            position    = cities.FindIndex(item => item.Name == e.Name);
-            oldCity     = e;
+            position = cities.FindIndex(item => item.Name == e.Name);
+            oldCity = e;
             etCity.Text = e.Name;
             llData.Visibility = ViewStates.Visible;
 
-            Keyboard.HideKeyboard(this, false);
+            Keyboard.HideKeyboard(this);
         }
 
         private void BtnOk_Click(object sender, EventArgs e)
         {
-            bool isNew = position == -1;
-            bool dataSetChanged = false;
+            var isNew = position == -1;
+            var dataSetChanged = false;
 
             llData.Visibility = ViewStates.Visible;
             Keyboard.HideKeyboard(this);
 
             if (etCity.Text != "")
             {
-                City city = new City(etCity.Text);
+                var city = new City(etCity.Text);
 
                 if (city.Validate())
                 {
@@ -160,7 +151,7 @@ namespace Android_X_Tashtit.ACTIVITIES
                     }
                     else
                     {
-                        AlertDialog.Builder alertDiag = new AlertDialog.Builder(this);
+                        var alertDiag = new AlertDialog.Builder(this);
 
                         alertDiag.SetTitle("Exists");
                         alertDiag.SetMessage(city.Name + " already exists");
@@ -168,7 +159,7 @@ namespace Android_X_Tashtit.ACTIVITIES
                         alertDiag.SetCancelable(true);
 
                         alertDiag.SetPositiveButton("OK", (senderAlert, args)
-                        =>
+                            =>
                         {
                             alertDiag.Dispose();
                         });
@@ -187,8 +178,8 @@ namespace Android_X_Tashtit.ACTIVITIES
         private void BtnCancel_Click(object sender, EventArgs e)
         {
             etCity.Text = "";
-            position    = -1;
-            oldCity     = null;
+            position = -1;
+            oldCity = null;
 
             llData.Visibility = ViewStates.Gone;
             Keyboard.HideKeyboard(this, true);

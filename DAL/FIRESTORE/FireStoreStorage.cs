@@ -1,18 +1,6 @@
-﻿using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Plugin.FirebaseStorage;
+﻿using System;
 using System.Threading.Tasks;
-using Android.Gms.Extensions;
-using System.IO;
+using Plugin.FirebaseStorage;
 
 namespace DAL.FIRESTORE
 {
@@ -32,7 +20,6 @@ namespace DAL.FIRESTORE
             }
             catch (Exception ex)
             {
-
             }
         }
 
@@ -72,18 +59,17 @@ namespace DAL.FIRESTORE
             }
             catch (Exception e)
             {
-
             }
         }
 
-        private static IStorageReference MakePath (IStorageReference reference, string path)
+        private static IStorageReference MakePath(IStorageReference reference, string path)
         {
             if (path != null)
             {
-                string[] vs = path.Split(new char[] { '/', '\\' });
+                var vs = path.Split('/', '\\');
 
                 if (vs.Length > 0)
-                    foreach (string v in vs)
+                    foreach (var v in vs)
                         reference = reference.Child(v);
             }
 

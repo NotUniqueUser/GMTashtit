@@ -2025,6 +2025,7 @@ namespace Android_X_Tashtit
 			global::HELPER.Resource.Attribute.drawableTintMode = global::Android_X_Tashtit.Resource.Attribute.drawableTintMode;
 			global::HELPER.Resource.Attribute.drawableTopCompat = global::Android_X_Tashtit.Resource.Attribute.drawableTopCompat;
 			global::HELPER.Resource.Attribute.drawerArrowStyle = global::Android_X_Tashtit.Resource.Attribute.drawerArrowStyle;
+			global::HELPER.Resource.Attribute.drawerLayoutStyle = global::Android_X_Tashtit.Resource.Attribute.drawerLayoutStyle;
 			global::HELPER.Resource.Attribute.dropdownListPreferredItemHeight = global::Android_X_Tashtit.Resource.Attribute.dropdownListPreferredItemHeight;
 			global::HELPER.Resource.Attribute.dropDownListViewStyle = global::Android_X_Tashtit.Resource.Attribute.dropDownListViewStyle;
 			global::HELPER.Resource.Attribute.editTextBackground = global::Android_X_Tashtit.Resource.Attribute.editTextBackground;
@@ -2376,6 +2377,7 @@ namespace Android_X_Tashtit
 			global::HELPER.Resource.Dimension.compat_control_corner_material = global::Android_X_Tashtit.Resource.Dimension.compat_control_corner_material;
 			global::HELPER.Resource.Dimension.compat_notification_large_icon_max_height = global::Android_X_Tashtit.Resource.Dimension.compat_notification_large_icon_max_height;
 			global::HELPER.Resource.Dimension.compat_notification_large_icon_max_width = global::Android_X_Tashtit.Resource.Dimension.compat_notification_large_icon_max_width;
+			global::HELPER.Resource.Dimension.def_drawer_elevation = global::Android_X_Tashtit.Resource.Dimension.def_drawer_elevation;
 			global::HELPER.Resource.Dimension.disabled_alpha_material_dark = global::Android_X_Tashtit.Resource.Dimension.disabled_alpha_material_dark;
 			global::HELPER.Resource.Dimension.disabled_alpha_material_light = global::Android_X_Tashtit.Resource.Dimension.disabled_alpha_material_light;
 			global::HELPER.Resource.Dimension.highlight_alpha_material_colored = global::Android_X_Tashtit.Resource.Dimension.highlight_alpha_material_colored;
@@ -3413,6 +3415,8 @@ namespace Android_X_Tashtit
 			global::HELPER.Resource.Styleable.DrawerArrowToggle_gapBetweenBars = global::Android_X_Tashtit.Resource.Styleable.DrawerArrowToggle_gapBetweenBars;
 			global::HELPER.Resource.Styleable.DrawerArrowToggle_spinBars = global::Android_X_Tashtit.Resource.Styleable.DrawerArrowToggle_spinBars;
 			global::HELPER.Resource.Styleable.DrawerArrowToggle_thickness = global::Android_X_Tashtit.Resource.Styleable.DrawerArrowToggle_thickness;
+			global::HELPER.Resource.Styleable.DrawerLayout = global::Android_X_Tashtit.Resource.Styleable.DrawerLayout;
+			global::HELPER.Resource.Styleable.DrawerLayout_elevation = global::Android_X_Tashtit.Resource.Styleable.DrawerLayout_elevation;
 			global::HELPER.Resource.Styleable.FontFamily = global::Android_X_Tashtit.Resource.Styleable.FontFamily;
 			global::HELPER.Resource.Styleable.FontFamilyFont = global::Android_X_Tashtit.Resource.Styleable.FontFamilyFont;
 			global::HELPER.Resource.Styleable.FontFamilyFont_android_font = global::Android_X_Tashtit.Resource.Styleable.FontFamilyFont_android_font;
@@ -13478,10 +13482,10 @@ namespace Android_X_Tashtit
 			public const int tvAddDate2 = 2131231237;
 			
 			// aapt resource value: 0x7F080206
-			public const int tvName = 2131231238;
+			public const int tvAddDate3 = 2131231238;
 			
 			// aapt resource value: 0x7F080207
-			public const int tvVaccineDate3 = 2131231239;
+			public const int tvName = 2131231239;
 			
 			// aapt resource value: 0x7F080208
 			public const int txtAge = 2131231240;

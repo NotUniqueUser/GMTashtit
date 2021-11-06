@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
-
 using DAL.FIRESTORE;
 using Plugin.CloudFirestore;
 
@@ -10,11 +7,9 @@ namespace MODEL
 {
     public class Cities : BaseList_FS<City>
     {
-        public Cities() { }
-
         public async Task<Cities> SelectAll()
         {
-            Cities cities = await FireStoreDbTable<City, Cities>.SelectAll("Name", Order_By_Direction.ACSCENDING);
+            var cities = await FireStoreDbTable<City, Cities>.SelectAll("Name");
             return cities;
         }
 
@@ -23,15 +18,15 @@ namespace MODEL
             GenereteUpdateLists();
 
             if (InsertList.Count > 0)
-                foreach (City c in InsertList)
+                foreach (var c in InsertList)
                     await FireStoreDbTable<City, Cities>.Insert(c);
 
             if (UpdateList.Count > 0)
-                foreach (City c in UpdateList)
+                foreach (var c in UpdateList)
                     await FireStoreDbTable<City, Cities>.Update(c);
 
             if (DeleteList.Count > 0)
-                foreach (City c in DeleteList)
+                foreach (var c in DeleteList)
                     await FireStoreDbTable<City, Cities>.Delete(c);
 
             return base.Save();
@@ -49,44 +44,37 @@ namespace MODEL
         }
 
         public event EventHandler<ProductEventArgs> OnCitiesRetrieved;
-        public class ProductEventArgs : EventArgs
-        {
-            public Cities cities { get; set; }
-        }
 
         public void FetchAndListen()
         {
-            Cities citiesList = new Cities();
+            var citiesList = new Cities();
 
-        FireStoreDB.Connection.Collection("Cities")
-                                   .AddSnapshotListener((snapshot, error) =>
-                                   {
-                                       if (snapshot != null)
-                                       {
-                                           foreach (var documentChange in snapshot.DocumentChanges)
-                                           {
-                                               switch (documentChange.Type)
-                                               {
-                                                   case DocumentChangeType.Added:
-                                                       // Document Added
-                                                       citiesList.Add(documentChange.Document.ToObject<City>());
-                                                       break;
-                                                   case DocumentChangeType.Modified:
-                                                       // Document Modified
-                                                       break;
-                                                   case DocumentChangeType.Removed:
-                                                       // Document Removed
-                                                       break;
-                                               }
-                                           }
-                                       }
-                                   });
+            FireStoreDB.Connection.Collection("Cities")
+                .AddSnapshotListener((snapshot, error) =>
+                {
+                    if (snapshot != null)
+                        foreach (var documentChange in snapshot.DocumentChanges)
+                            switch (documentChange.Type)
+                            {
+                                case DocumentChangeType.Added:
+                                    // Document Added
+                                    citiesList.Add(documentChange.Document.ToObject<City>());
+                                    break;
+                                case DocumentChangeType.Modified:
+                                    // Document Modified
+                                    break;
+                                case DocumentChangeType.Removed:
+                                    // Document Removed
+                                    break;
+                            }
+                });
 
-            if (this.OnCitiesRetrieved != null)
-            {
-                OnCitiesRetrieved.Invoke(this, new ProductEventArgs { cities = citiesList });
-            }
+            if (OnCitiesRetrieved != null) OnCitiesRetrieved.Invoke(this, new ProductEventArgs {cities = citiesList});
+        }
 
+        public class ProductEventArgs : EventArgs
+        {
+            public Cities cities { get; set; }
         }
     }
 }

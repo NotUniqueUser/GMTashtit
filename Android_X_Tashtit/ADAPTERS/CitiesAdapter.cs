@@ -1,16 +1,8 @@
-﻿using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
+﻿using System.Collections.Generic;
 using Android.Views;
 using Android.Widget;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using MODEL;
 using AndroidX.RecyclerView.Widget;
+using MODEL;
 
 namespace Android_X_Tashtit.ADAPTERS
 {
@@ -18,11 +10,12 @@ namespace Android_X_Tashtit.ADAPTERS
     {
         public CitiesAdapter(RecyclerView recyclerView, List<City> items, int? layoutId = null)
             : base(recyclerView, items, layoutId)
-        { }
+        {
+        }
 
         protected override void OnLookupViewItems(View layout, BaseViewHolder viewHolder)
         {
-            TextView name = layout.FindViewById<TextView>(Resource.Id.txtName);
+            var name = layout.FindViewById<TextView>(Resource.Id.txtName);
 
             viewHolder.AddView(name, "name");
         }

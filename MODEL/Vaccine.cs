@@ -1,20 +1,10 @@
-﻿using Android.App;
-using Android.Content;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System;
 using HELPER;
 
 namespace MODEL
 {
     public class Vaccine : BaseEntity
     {
-        private string userNo;
         private DateTime date;
 
         public Vaccine()
@@ -23,20 +13,24 @@ namespace MODEL
 
         public Vaccine(string userNo, DateTime date)
         {
-            this.userNo = userNo;
+            this.UserNo = userNo;
             this.date = date;
         }
 
-        public string UserNo { get => userNo; set => userNo = value; }
-        public DateTime Date { get => date; set => date = value; }
+        public string UserNo { get; set; }
+
+        public DateTime Date
+        {
+            get => date;
+            set => date = value;
+        }
 
         public override bool Validate()
         {
-            return !string.IsNullOrEmpty(userNo)
-                && DateTimeUtil.IsValidDate(date.ToLongDateString())
-                && ValidateEntry.CheckID(userNo, true) == ErrorStatus.NONE
-                && (DateTime.Today - date).TotalDays >= 0;
-
+            return !string.IsNullOrEmpty(UserNo)
+                   && DateTimeUtil.IsValidDate(date.ToLongDateString())
+                   && ValidateEntry.CheckID(UserNo, true) == ErrorStatus.NONE
+                   && (DateTime.Today - date).TotalDays >= 0;
         }
     }
 }

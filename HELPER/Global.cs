@@ -1,30 +1,31 @@
-﻿using Android.App;
+﻿using System;
+using System.Collections.Generic;
+using Android.App;
 using Android.Content;
 using Android.OS;
+using Android.Provider;
 using Android.Views;
 using Android.Widget;
-using Java.Interop;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+using Environment = System.Environment;
 
 namespace HELPER
 {
     public class Global
     {
+        private static readonly int REQUEST_CAMERA = 0;
+        private static readonly int SELECT_FILE = 1;
+
         public static void ToastCenteredText(Context context, string message, ToastLength toastLength)
         {
-            Toast toast = Toast.MakeText(context, message, toastLength);
-            LinearLayout layout = (LinearLayout)toast.View;
+            var toast = Toast.MakeText(context, message, toastLength);
+            var layout = (LinearLayout) toast.View;
 
             if (layout.ChildCount > 0)
             {
-                TextView tv = (TextView)layout.GetChildAt(0);
+                var tv = (TextView) layout.GetChildAt(0);
                 tv.Gravity = GravityFlags.Center;
             }
+
             toast.Show();
         }
 
@@ -38,26 +39,26 @@ namespace HELPER
             if (askPermision)
             {
                 // set dialog message
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
+                var alertDialogBuilder = new AlertDialog.Builder(context);
 
-                alertDialogBuilder.SetTitle((isHebrew) ? "יציאה" : "Exit");
-                alertDialogBuilder.SetMessage((isHebrew) ? "האם ברצונך לצאת ?" : "Do yo really want to exit ?");
+                alertDialogBuilder.SetTitle(isHebrew ? "יציאה" : "Exit");
+                alertDialogBuilder.SetMessage(isHebrew ? "האם ברצונך לצאת ?" : "Do yo really want to exit ?");
                 alertDialogBuilder.SetCancelable(false);
 
-                alertDialogBuilder.SetPositiveButton(((isHebrew) ? "כן" : "YES"), (senderAlert, args)
+                alertDialogBuilder.SetPositiveButton(isHebrew ? "כן" : "YES", (senderAlert, args)
                     =>
                 {
                     QuitApp(context);
                 });
 
-                alertDialogBuilder.SetNeutralButton(((isHebrew) ? "ביטול" : "CANCEL"), (senderAlert, args)
+                alertDialogBuilder.SetNeutralButton(isHebrew ? "ביטול" : "CANCEL", (senderAlert, args)
                     =>
                 {
                     alertDialogBuilder.Dispose();
                 });
 
-                alertDialogBuilder.SetNegativeButton(((isHebrew) ? "לא" : "NO"), (senderAlert, args)
-                   =>
+                alertDialogBuilder.SetNegativeButton(isHebrew ? "לא" : "NO", (senderAlert, args)
+                    =>
                 {
                     alertDialogBuilder.Dispose();
                 });
@@ -79,16 +80,11 @@ namespace HELPER
 
             //1.If you want to quit application in an Activity use this code snippet:
 
-            if ((int)Build.VERSION.SdkInt >= 16 && (int)Build.VERSION.SdkInt < 21)
-            {
-                ((Activity)context).FinishAffinity();
-            }
-            else if ((int)Build.VERSION.SdkInt >= 21)
-            {
-                ((Activity)context).FinishAndRemoveTask();
-            }
+            if ((int) Build.VERSION.SdkInt >= 16 && (int) Build.VERSION.SdkInt < 21)
+                ((Activity) context).FinishAffinity();
+            else if ((int) Build.VERSION.SdkInt >= 21) ((Activity) context).FinishAndRemoveTask();
 
-            System.Environment.Exit(0);
+            Environment.Exit(0);
 
             //************************************************************************
 
@@ -103,32 +99,30 @@ namespace HELPER
             //************************************************************************
         }
 
-
-        private static readonly int REQUEST_CAMERA = 0;
-        private static readonly int SELECT_FILE = 1;
-
         public static void TakePicture(Context context, bool isHebrew = true)
         {
-            string[] items = { "Take Photo", "Choose from Library", "Cancel" };
-            string[] itemsHebrew = { "צילום תמונה", "בחירה מגלריה", "ביטול" };
+            string[] items = {"Take Photo", "Choose from Library", "Cancel"};
+            string[] itemsHebrew = {"צילום תמונה", "בחירה מגלריה", "ביטול"};
 
             using (var dialogBuilder = new AlertDialog.Builder(context))
             {
-                dialogBuilder.SetTitle((isHebrew) ? "תמונה" : "Photo");
-                dialogBuilder.SetItems(((isHebrew) ? itemsHebrew : items), (d, args) => {
+                dialogBuilder.SetTitle(isHebrew ? "תמונה" : "Photo");
+                dialogBuilder.SetItems(isHebrew ? itemsHebrew : items, (d, args) =>
+                {
                     //Take photo
                     if (args.Which == 0)
                     {
-                        Intent intent = new Intent(Android.Provider.MediaStore.ActionImageCapture);
-                        ((Activity)context).StartActivityForResult(intent, REQUEST_CAMERA);
+                        var intent = new Intent(MediaStore.ActionImageCapture);
+                        ((Activity) context).StartActivityForResult(intent, REQUEST_CAMERA);
                     }
                     //Choose from gallery
                     else if (args.Which == 1)
                     {
-                        Intent imageIntent = new Intent();
+                        var imageIntent = new Intent();
                         imageIntent.SetType("image/*");
                         imageIntent.SetAction(Intent.ActionGetContent);
-                        ((Activity)context).StartActivityForResult(Intent.CreateChooser(imageIntent, "Select photo"), SELECT_FILE);
+                        ((Activity) context).StartActivityForResult(Intent.CreateChooser(imageIntent, "Select photo"),
+                            SELECT_FILE);
                     }
                 });
 
@@ -148,24 +142,24 @@ namespace HELPER
         */
 
         /// <summary>
-        /// Get all views of Activity
+        ///     Get all views of Activity
         /// </summary>
         /// <param name="v"></param>
         /// <param name="lv"></param>
         /// <returns></returns>
-        /// USAGE: List<View> l = Global.GetChildren(Window.DecorView, new List<View>(), new List<string> { "EditText", "ImageView" });
+        /// USAGE: List
+        /// <View> l = Global.GetChildren(Window.DecorView, new List<View>(), new List<string> { "EditText", "ImageView" });
         public static List<View> GetChildren(View v, List<View> allViews, List<string> filter = null)
         {
-            ViewGroup viewgroup = (ViewGroup)v;
-            for (int i = 0; i < viewgroup.ChildCount; i++)
+            var viewgroup = (ViewGroup) v;
+            for (var i = 0; i < viewgroup.ChildCount; i++)
             {
-                View v1 = viewgroup.GetChildAt(i);
+                var v1 = viewgroup.GetChildAt(i);
                 if (v1 is ViewGroup) GetChildren(v1, allViews, filter);
                 if (filter == null)
                     //if (v1 is Android.Views.View)
                     allViews.Add(v1);
-                else
-                    if (FindInList(filter, v1.GetType().ToString()))
+                else if (FindInList(filter, v1.GetType().ToString()))
                     allViews.Add(v1);
             }
 
@@ -174,9 +168,9 @@ namespace HELPER
 
         private static bool FindInList(List<string> filter, string type)
         {
-            bool found = false;
+            var found = false;
 
-            foreach (string s in filter)
+            foreach (var s in filter)
                 if (type.ToUpper().IndexOf(s.ToUpper()) > 0)
                     found = true;
 
@@ -184,16 +178,16 @@ namespace HELPER
         }
 
         /// <summary>
-        /// Displays an alert dialog with a positive and a negative button.
+        ///     Displays an alert dialog with a positive and a negative button.
         /// </summary>
         /// <param name="callback">This is called when the user picks an option. True if positive, false if negative.</param>
         public static void YesNoAlertDialog(Context context,
-                                            string title,
-                                            string message,
-                                            string positive,
-                                            string negative,
-                                            Action<bool> callback,
-                                            bool cancelable = false)
+            string title,
+            string message,
+            string positive,
+            string negative,
+            Action<bool> callback,
+            bool cancelable = false)
         {
             using (var alertDiag = new AlertDialog.Builder(context))
             {
@@ -207,29 +201,30 @@ namespace HELPER
             }
         }
 
-        public static ProgressDialog SetProgress(Context context, 
-                                                 bool    indeterminate     = true, 
-                                                 ProgressDialogStyle style = ProgressDialogStyle.Spinner, 
-                                                 string message            = "Loading Data...", 
-                                                 bool   cancalable         = false)
+        public static ProgressDialog SetProgress(Context context,
+            bool indeterminate = true,
+            ProgressDialogStyle style = ProgressDialogStyle.Spinner,
+            string message = "Loading Data...",
+            bool cancalable = false)
         {
-            ProgressDialog progress = new ProgressDialog(context);
-            progress.Indeterminate  = indeterminate;
+            var progress = new ProgressDialog(context);
+            progress.Indeterminate = indeterminate;
             progress.SetProgressStyle(style);
             progress.SetMessage(message);
             progress.SetCancelable(cancalable);
             progress.Show();
             return progress;
         }
+
         /// <summary>
-        /// Get the table name involved in the sql query
+        ///     Get the table name involved in the sql query
         /// </summary>
         /// <param name="sql">SQL statemenr</param>
         /// <returns>Table Name</returns>
         public static string ParseTableNameFromSQL(string sql)
         {
             string[] words;
-            string tableName = "";
+            var tableName = "";
             int index;
 
             words = sql.ToUpper().Split();
@@ -237,24 +232,27 @@ namespace HELPER
             if (words[0].Equals("SELECT"))
             {
                 // find FROM
-                index = Array.FindIndex<string>(words, s => s.ToUpper().Equals("FROM"));
+                index = Array.FindIndex(words, s => s.ToUpper().Equals("FROM"));
 
                 // skip all spaces
-                index = Array.FindIndex<string>(words, index + 1, s => !s.Equals(""));
+                index = Array.FindIndex(words, index + 1, s => !s.Equals(""));
 
                 tableName = words[index];
             }
-            else
-                if (words[0].Equals("DELETE") || words[0].Equals("INSERT"))
+            else if (words[0].Equals("DELETE") || words[0].Equals("INSERT"))
+            {
                 tableName = words[2];
+            }
             else
-                tableName = words[1];   // UPDATE
+            {
+                tableName = words[1]; // UPDATE
+            }
 
             return tableName;
         }
 
         /// <summary>
-        /// בדיקה האם תאריך
+        ///     בדיקה האם תאריך
         /// </summary>
         /// <param name="date">מחרוזת התאריך לבדיקה</param>
         /// <returns>נכון/לא נכון</returns>
@@ -263,12 +261,11 @@ namespace HELPER
             DateTime tryDate;
             if (DateTime.TryParse(date.ToString(), out tryDate))
                 return true;
-            else
-                return false;
+            return false;
         }
 
         /// <summary>
-        /// בדיקה אם שעה
+        ///     בדיקה אם שעה
         /// </summary>
         /// <param name="time">מחרוזת השעה לבדיקה</param>
         /// <returns>נכון/לא נכון</returns>
@@ -278,18 +275,17 @@ namespace HELPER
             string t;
 
             if (IsDate(time))
-                t = time.ToString().Substring(11);  // יש לחלץ את השעה מהתאריך
+                t = time.ToString().Substring(11); // יש לחלץ את השעה מהתאריך
             else
-                t = time.ToString();                //          התקבלה שעה בלבד  
+                t = time.ToString(); //          התקבלה שעה בלבד  
 
             if (TimeSpan.TryParse(t, out ts))
                 return true;
-            else
-                return false;
+            return false;
         }
 
         /// <summary>
-        /// מחשב גיל
+        ///     מחשב גיל
         /// </summary>
         /// <param name="birthDate">תאריך לידה</param>
         /// <returns>גיל</returns>
@@ -298,10 +294,12 @@ namespace HELPER
             double age;
 
             if (!IsDate(birthDate.ToString()))
+            {
                 age = -1;
+            }
             else
             {
-                TimeSpan ts = DateTime.Today - birthDate;
+                var ts = DateTime.Today - birthDate;
                 age = ts.Days / 365.25;
             }
 
@@ -309,15 +307,15 @@ namespace HELPER
         }
 
         /// <summary>
-        /// מחשב גיל
+        ///     מחשב גיל
         /// </summary>
         /// <param name="birthDate">תאריך לידה</param>
         /// <param name="separator">מפריד בין שנים לחודשים</param>
         /// <returns>גיל בפורמט שנים וחודשים</returns>
         public static string AgeString(DateTime birthDate, char separator = '|')
         {
-            double age = Age(birthDate);
-            string[] ages = age.ToString().Split('.');
+            var age = Age(birthDate);
+            var ages = age.ToString().Split('.');
             if (ages.Length == 1)
             {
                 ages = new string[2];
@@ -325,16 +323,14 @@ namespace HELPER
                 ages[1] = "0";
             }
 
-            if ((int)(Convert.ToDouble("0." + ages[1]) * 12) == 0)
+            if ((int) (Convert.ToDouble("0." + ages[1]) * 12) == 0)
                 return ages[0];
-            else
-                return ages[0] + separator + ((int)(Convert.ToDouble("0." + ages[1]) * 12)).ToString();
+            return ages[0] + separator + ((int) (Convert.ToDouble("0." + ages[1]) * 12));
         }
 
 
-
         /// <summary>
-        /// בדיקה אם מספר שלם נמצא בטווח מספרים
+        ///     בדיקה אם מספר שלם נמצא בטווח מספרים
         /// </summary>
         /// <param name="dateToCheck">המספר לבדיקה</param>
         /// <param name="startDate">מםפר התחלת הטווח</param>
@@ -346,7 +342,7 @@ namespace HELPER
         }
 
         /// <summary>
-        /// בדיקה אם מספר עשרוני נמצא בטווח מספרים
+        ///     בדיקה אם מספר עשרוני נמצא בטווח מספרים
         /// </summary>
         /// <param name="dateToCheck">המספר לבדיקה</param>
         /// <param name="startDate">מםפר התחלת הטווח</param>
@@ -358,7 +354,7 @@ namespace HELPER
         }
 
         /// <summary>
-        /// בדיקה אם מספר דצימאלי נמצא בטווח מספרים
+        ///     בדיקה אם מספר דצימאלי נמצא בטווח מספרים
         /// </summary>
         /// <param name="dateToCheck">המספר לבדיקה</param>
         /// <param name="startDate">מםפר התחלת הטווח</param>
@@ -370,16 +366,16 @@ namespace HELPER
         }
 
         /// <summary>
-        /// בודקת ומתקנת כל מילה עברית שלא תתחיל באות סופית
+        ///     בודקת ומתקנת כל מילה עברית שלא תתחיל באות סופית
         /// </summary>
         /// <param name="s"></param>
         /// <returns></returns>
         public static string FixHebrewString(string s)
         {
             int i;
-            char[] delimiterChars = { ' ', ',', '.', ':', '\t' };
-            string[] oldWords = s.Split(delimiterChars);
-            string[] newWords = s.Split(delimiterChars);
+            char[] delimiterChars = {' ', ',', '.', ':', '\t'};
+            var oldWords = s.Split(delimiterChars);
+            var newWords = s.Split(delimiterChars);
 
             for (i = 0; i < newWords.Length; i++)
                 if (newWords[i].StartsWith("ך")) newWords[i] = "כ" + newWords[i].Substring(1);
@@ -395,44 +391,42 @@ namespace HELPER
         }
 
         /// <summary>
-        /// Check if a string is URL
+        ///     Check if a string is URL
         /// </summary>
         /// <param name="url">String to check</param>
         /// <returns>TRUE if URL otherwise FASLE</returns>
         public static bool IsUrl(string url)
         {
-            return System.Uri.IsWellFormedUriString(url, UriKind.RelativeOrAbsolute);
+            return Uri.IsWellFormedUriString(url, UriKind.RelativeOrAbsolute);
         }
 
         /// <summary>
-        /// Calculate Sum of digits of a given number according to Luhn Algorithm (MOD10)
-        /// https://en.wikipedia.org/wiki/Luhn_algorithm
+        ///     Calculate Sum of digits of a given number according to Luhn Algorithm (MOD10)
+        ///     https://en.wikipedia.org/wiki/Luhn_algorithm
         /// </summary>
         /// <param name="number">The number to calculate it's sum of digits</param>
         /// <returns>Sum of digits</returns>
         private static int SumOfDigits(string number)
         {
-            int len = number.Length;
-            int multiplier = 1;
-            int sumOfDigits = 0;
+            var len = number.Length;
+            var multiplier = 1;
+            var sumOfDigits = 0;
             int digitSum;
 
-            for (int i = len - 1; i >= 0; i--)
-            {
+            for (var i = len - 1; i >= 0; i--)
                 if (number[i] >= '0' && number[i] <= '9')
                 {
                     digitSum = multiplier * (number[i] - '0');
                     sumOfDigits += digitSum / 10 + digitSum % 10;
                     multiplier = 3 - multiplier;
                 }
-            }
 
             return sumOfDigits;
         }
 
         /// <summary>
-        /// Check if number matches Luhn Algorithm (Mod10)
-        /// https://en.wikipedia.org/wiki/Luhn_algorithm
+        ///     Check if number matches Luhn Algorithm (Mod10)
+        ///     https://en.wikipedia.org/wiki/Luhn_algorithm
         /// </summary>
         /// <param name="number">Tje number to check</param>
         /// <returns>TRUE if MOD10 otherwise FALSE</returns>
@@ -442,8 +436,8 @@ namespace HELPER
         }
 
         /// <summary>
-        /// Check if number matches Luhn Algorithm (Mod10)
-        /// https://en.wikipedia.org/wiki/Luhn_algorithm
+        ///     Check if number matches Luhn Algorithm (Mod10)
+        ///     https://en.wikipedia.org/wiki/Luhn_algorithm
         /// </summary>
         /// <param name="number">Tje number to check</param>
         /// <returns>TRUE if MOD10 otherwise FALSE</returns>
@@ -453,15 +447,15 @@ namespace HELPER
         }
 
         /// <summary>
-        /// Calculate check digit according to Luhn Algorithm (MOD10)
-        /// https://en.wikipedia.org/wiki/Luhn_algorithm
+        ///     Calculate check digit according to Luhn Algorithm (MOD10)
+        ///     https://en.wikipedia.org/wiki/Luhn_algorithm
         /// </summary>
         /// <param name="number">The number to calculate check digit</param>
         /// <returns>Check Digit</returns>
         public static char CalculateCheckDigit(string number)
         {
-            int sumOfDigits = SumOfDigits(number);
-            string s = (sumOfDigits * 9).ToString();
+            var sumOfDigits = SumOfDigits(number);
+            var s = (sumOfDigits * 9).ToString();
 
             return Convert.ToChar(s.Substring(s.Length - 1, 1));
         }

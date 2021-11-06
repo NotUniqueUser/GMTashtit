@@ -1,30 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿using System.Collections.Generic;
 using SQLite;
 
 namespace MODEL
 {
-    [Table ("Cities")]
+    [Table("Cities")]
     public class City : BaseEntity
     {
-        private string name;
-
-        public City() { }
+        public City()
+        {
+        }
 
         public City(string name)
         {
-            this.name = name;
+            this.Name = name;
         }
 
-        public string Name { get => name; set => name = value; }
+        public string Name { get; set; }
 
         public override bool Equals(object obj)
         {
             return obj is City city &&
                    base.Equals(obj) &&
-                   name == city.name;
+                   Name == city.Name;
         }
 
         public static bool operator ==(City left, City right)
@@ -39,12 +36,12 @@ namespace MODEL
 
         public override string ToString()
         {
-            return name;
+            return Name;
         }
 
         public override bool Validate()
         {
-            return !string.IsNullOrEmpty(name);
+            return !string.IsNullOrEmpty(Name);
         }
     }
 }
