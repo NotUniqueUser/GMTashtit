@@ -1,10 +1,13 @@
 ﻿using Android;
 using Android.App;
+using Android.Content;
 using Android.Content.PM;
 using Android.OS;
 using Android.Runtime;
 using Android.Widget;
 using Google.Android.Material.TextField;
+using HELPER;
+using MODEL;
 using Xamarin.Essentials;
 
 namespace Android_X_Tashtit.ACTIVITIES
@@ -18,6 +21,7 @@ namespace Android_X_Tashtit.ACTIVITIES
             Manifest.Permission.WriteExternalStorage
         };
 
+        private TextView maTvRegister;
         private Button maBtnLogin;
         private EditText maEtEmail;
         private TextInputEditText maEtPassword;
@@ -29,7 +33,6 @@ namespace Android_X_Tashtit.ACTIVITIES
         {
             base.OnCreate(savedInstanceState);
             Platform.Init(this, savedInstanceState);
-            // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.activity_main);
 
             InitializeViews();
@@ -45,6 +48,34 @@ namespace Android_X_Tashtit.ACTIVITIES
             maLyPassword = FindViewById<TextInputLayout>(Resource.Id.maLyPassword);
             maEtPassword = FindViewById<TextInputEditText>(Resource.Id.maEtPassword);
             maBtnLogin = FindViewById<Button>(Resource.Id.maBtnLogin);
+            maTvRegister = FindViewById<TextView>(Resource.Id.maTvRegister);
+
+            maTvRegister.Click += MaTvRegister_Click;
+        }
+
+        private void MaTvRegister_Click(object sender, System.EventArgs e)
+        {
+            StartActivityForResult(new Intent(this, typeof(ACTIVITIES.UserActivity)), 1);
+        }
+
+        protected override async void OnActivityResult(int requestCode, [GeneratedEnum] Result resultCode, Intent data)
+        {
+            if (resultCode != Result.Ok)
+                return;
+
+
+            var user = Serializer.ByteArrayToObject(data.GetByteArrayExtra("USER")) as User;
+            Users users = await Users.SelectAll();
+            if (!users.Exist(user))
+            {
+                users.Add(user);
+                await users.Save();
+            }
+            else
+            {
+                Toast.MakeText(this, "User already exists", ToastLength.Long).Show();
+            }
+            base.OnActivityResult(requestCode, resultCode, data);
         }
 
         public override void OnRequestPermissionsResult(int requestCode, string[] permissions,
