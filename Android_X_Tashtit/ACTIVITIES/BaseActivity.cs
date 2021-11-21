@@ -5,6 +5,7 @@ using Android.Views;
 using Android.Widget;
 using Android_X_Tashtit.SERVICES;
 using AndroidX.AppCompat.App;
+using MODEL;
 using AlertDialog = Android.App.AlertDialog;
 
 namespace Android_X_Tashtit.ACTIVITIES
@@ -17,6 +18,7 @@ namespace Android_X_Tashtit.ACTIVITIES
 
         public static string PACKAGE_NAME;
 
+        public static User CurrentUser;
 
         //public static Customer CurrentCustomer;
 

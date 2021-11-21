@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Android.Content;
 using Android.Graphics;
 using DAL.FIRESTORE;
 using HELPER;
@@ -83,6 +84,12 @@ namespace MODEL
                 var compare = item1.Family.CompareTo(item2.Family);
                 return compare == 0 ? item1.Name.CompareTo(item2.Name) : compare;
             });
+        }
+
+        public static async bool LoginUser(string email, string password)
+        {
+
+            return false;
         }
 
         public static async Task<User> GetUser(string tz)

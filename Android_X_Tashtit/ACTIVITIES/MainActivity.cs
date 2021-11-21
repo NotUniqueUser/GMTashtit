@@ -23,21 +23,28 @@ namespace Android_X_Tashtit.ACTIVITIES
 
         private TextView maTvRegister;
         private Button maBtnLogin;
+        private CheckBox maCbRememberMe;
         private EditText maEtEmail;
+        private Users users;
         private TextInputEditText maEtPassword;
         private LinearLayout maLlLogin;
         private TextInputLayout maLyEmail;
         private TextInputLayout maLyPassword;
 
-        protected override void OnCreate(Bundle savedInstanceState)
+        protected override async void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
             Platform.Init(this, savedInstanceState);
             SetContentView(Resource.Layout.activity_main);
 
             InitializeViews();
-
+            users = await Users.SelectAll();
             RequestPermissions(permissions, 0);
+            var userEmail = GetSharedPreferences("LOGIN", FileCreationMode.Private).GetString("EMAIL", null);
+            if (userEmail != null)
+            {
+                CurrentUser = users.Find("Email", userEmail);
+            }
         }
 
         protected override void InitializeViews()
@@ -45,12 +52,36 @@ namespace Android_X_Tashtit.ACTIVITIES
             maLyEmail = FindViewById<TextInputLayout>(Resource.Id.maLyEmail);
             maLlLogin = FindViewById<LinearLayout>(Resource.Id.maLlLogin);
             maEtEmail = FindViewById<EditText>(Resource.Id.maEtEmail);
+            maCbRememberMe = FindViewById<CheckBox>(Resource.Id.maCbRemeberMe);
             maLyPassword = FindViewById<TextInputLayout>(Resource.Id.maLyPassword);
             maEtPassword = FindViewById<TextInputEditText>(Resource.Id.maEtPassword);
             maBtnLogin = FindViewById<Button>(Resource.Id.maBtnLogin);
             maTvRegister = FindViewById<TextView>(Resource.Id.maTvRegister);
 
             maTvRegister.Click += MaTvRegister_Click;
+            maBtnLogin.Click += MaBtnLogin_Click;
+        }
+
+        private void MaBtnLogin_Click(object sender, System.EventArgs e)
+        {
+            var user = users.Find("Email", maEtEmail.Text);
+            if(user == null)
+            {
+                Toast.MakeText(this, "User not found", ToastLength.Long).Show();
+            }
+            if(user.Password != maEtPassword.Text)
+            {
+                Toast.MakeText(this, "Incorrect password!", ToastLength.Long).Show();
+            }
+            var preferences = GetSharedPreferences("LOGIN", FileCreationMode.Private);
+            if (maCbRememberMe.Checked)
+            {
+                var editor = preferences.Edit();
+                editor.PutString("EMAIL", user.Email);
+                editor.PutString("PASSWORD", user.Password);
+                editor.Apply();
+            }
+            CurrentUser = user;
         }
 
         private void MaTvRegister_Click(object sender, System.EventArgs e)
@@ -65,7 +96,6 @@ namespace Android_X_Tashtit.ACTIVITIES
 
 
             var user = Serializer.ByteArrayToObject(data.GetByteArrayExtra("USER")) as User;
-            Users users = await Users.SelectAll();
             if (!users.Exist(user))
             {
                 users.Add(user);
